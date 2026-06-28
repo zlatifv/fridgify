@@ -4,173 +4,498 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Fridgify</title>
-<!-- PWA manifest inline -->
-<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Fridgify&quot;,&quot;short_name&quot;:&quot;Fridgify&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23f1efe8&quot;,&quot;theme_color&quot;:&quot;%231a5cc8&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a5cc8'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E🧊%3C/text%3E%3C/svg%3E&quot;,&quot;sizes&quot;:&quot;any&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}" />
+<meta name="description" content="Turn what's in your fridge into recipe ideas." />
 <meta name="theme-color" content="#1a5cc8" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icons/icon-192.png" />
+<link rel="apple-touch-icon" href="/icons/icon-192.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="Fridgify" />
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a5cc8'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E🧊%3C/text%3E%3C/svg%3E" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --surface-0:#f1efe8;--surface-1:#e8e6e0;--surface-2:#ffffff;
-  --border:rgba(0,0,0,0.10);--border-strong:rgba(0,0,0,0.18);
-  --text-primary:#1a1a18;--text-secondary:#4a4a45;--text-muted:#888780;
-  --bg-accent:#e8f0fb;--text-accent:#1a5cc8;--border-accent:#b3ccf5;
-  --fill-accent:#1a5cc8;--on-accent:#ffffff;
-  --bg-success:#e8f5e8;--text-success:#1e6b1e;--border-success:#9fd89f;
-  --radius:8px;--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-}
-.theme-forest{--surface-0:#1a2e1a;--surface-1:#223322;--surface-2:#2a3d2a;--border:rgba(100,180,100,0.15);--border-strong:rgba(100,180,100,0.3);--text-primary:#e8f5e8;--text-secondary:#9dbf9d;--text-muted:#5a7a5a;--bg-accent:#1e3b1e;--text-accent:#6fcf6f;--border-accent:#3a5c3a;--fill-accent:#4a9e4a;--on-accent:#fff;--bg-success:#1e3b1e;--text-success:#6fcf6f;--border-success:#3a5c3a;--chip-bg:#2a4a2a;--pref-active-bg:#2a4a2a;--pref-active-text:#6fcf6f;--meta-bg:#223322;--meta-text:#9dbf9d}
-.theme-sunset{--surface-0:#2d1b0e;--surface-1:#3d2518;--surface-2:#4a2e1e;--border:rgba(180,100,60,0.2);--border-strong:rgba(180,100,60,0.4);--text-primary:#fdebd0;--text-secondary:#c8956a;--text-muted:#8a6045;--bg-accent:#3d2518;--text-accent:#f4a261;--border-accent:#6b3d20;--fill-accent:#e76f51;--on-accent:#fff;--bg-success:#3d2518;--text-success:#f4a261;--border-success:#6b3d20;--chip-bg:#5c3520;--pref-active-bg:#5c3520;--pref-active-text:#f4a261;--meta-bg:#3d2518;--meta-text:#c8956a}
-.theme-ocean{--surface-0:#0a1628;--surface-1:#0f2040;--surface-2:#142a50;--border:rgba(79,195,247,0.15);--border-strong:rgba(79,195,247,0.3);--text-primary:#e1f5fe;--text-secondary:#7fb3d3;--text-muted:#3a6a8a;--bg-accent:#0f2040;--text-accent:#4fc3f7;--border-accent:#1a3a6a;--fill-accent:#0288d1;--on-accent:#fff;--bg-success:#0f2040;--text-success:#4fc3f7;--border-success:#1a3a6a;--chip-bg:#0a2a4a;--pref-active-bg:#0a2a4a;--pref-active-text:#4fc3f7;--meta-bg:#0f2040;--meta-text:#7fb3d3}
-.theme-lavender{--surface-0:#1a1528;--surface-1:#221e38;--surface-2:#2a2545;--border:rgba(179,157,219,0.15);--border-strong:rgba(179,157,219,0.3);--text-primary:#ede7f6;--text-secondary:#9575cd;--text-muted:#5a4e80;--bg-accent:#221e38;--text-accent:#b39ddb;--border-accent:#3d3560;--fill-accent:#7e57c2;--on-accent:#fff;--bg-success:#221e38;--text-success:#b39ddb;--border-success:#3d3560;--chip-bg:#312a50;--pref-active-bg:#312a50;--pref-active-text:#b39ddb;--meta-bg:#221e38;--meta-text:#9575cd}
-.theme-paper{--surface-0:#faf6f0;--surface-1:#f2ece2;--surface-2:#fff;--border:rgba(100,70,40,0.12);--border-strong:rgba(100,70,40,0.25);--text-primary:#2c1810;--text-secondary:#6b4c35;--text-muted:#a08060;--bg-accent:#f0e4d0;--text-accent:#8b5e3c;--border-accent:#c9a07a;--fill-accent:#8b5e3c;--on-accent:#fff;--bg-success:#f0e4d0;--text-success:#8b5e3c;--border-success:#c9a07a;--chip-bg:#f0e4d0;--pref-active-bg:#f0e4d0;--pref-active-text:#8b5e3c;--meta-bg:#f0e4d0;--meta-text:#6b4c35}
-body{font-family:var(--font-sans);background:var(--surface-0);color:var(--text-primary);min-height:100vh;transition:background 0.25s,color 0.25s}
-.shell{max-width:720px;margin:0 auto;padding:0 1rem 4rem}
-nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;margin-bottom:0.5rem;gap:12px;flex-wrap:wrap}
-.nav-tabs{display:flex;gap:4px}
-.nav-tab{padding:7px 16px;border-radius:20px;font-size:14px;border:0.5px solid transparent;cursor:pointer;background:none;color:var(--text-muted);font-family:var(--font-sans);transition:all 0.15s}
-.nav-tab.active{background:var(--surface-2);border-color:var(--border-strong);color:var(--text-primary)}
-.nav-tab:not(.active):hover{color:var(--text-secondary)}
-.nav-right{display:flex;align-items:center;gap:10px}
-select{height:32px;padding:0 10px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);font-size:13px;font-family:var(--font-sans);cursor:pointer}
-.theme-dots{display:flex;gap:6px;align-items:center}
-.theme-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:border-color 0.15s;flex-shrink:0}
-.theme-dot.active{border-color:var(--text-primary)}
-.dot-default{background:conic-gradient(#e8e6e1 0deg 90deg,#3d3d3a 90deg 180deg,#e8e6e1 180deg 270deg,#3d3d3a 270deg)}.dot-forest{background:#4a9e4a}.dot-sunset{background:#e76f51}.dot-ocean{background:#0288d1}.dot-lavender{background:#7e57c2}.dot-paper{background:#8b5e3c}
-.page{display:none}.page.active{display:block}
-.page-header{margin-bottom:1.75rem}
-.page-header h1{font-size:22px;font-weight:500;color:var(--text-primary)}
-.page-header p{font-size:14px;color:var(--text-muted);margin-top:4px}
-.input-row{display:flex;gap:8px;margin-bottom:10px}
-.input-row input{flex:1;height:36px;padding:0 12px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);font-size:14px;font-family:var(--font-sans)}
-.input-row input::placeholder{color:var(--text-muted)}
-.input-row input:focus{outline:none;box-shadow:0 0 0 2px var(--bg-accent);border-color:var(--border-accent)}
-.add-btn{height:36px;padding:0 16px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);font-size:14px;cursor:pointer;font-family:var(--font-sans);white-space:nowrap;display:flex;align-items:center;gap:6px}
-.add-btn:hover{background:var(--surface-1)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;min-height:32px;margin-bottom:1.25rem}
-.chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:20px;background:var(--chip-bg,var(--bg-accent));color:var(--text-accent);font-size:13px;font-weight:500}
-.chip button{background:none;border:none;cursor:pointer;color:var(--text-accent);padding:0;line-height:1;font-size:16px;opacity:0.7}
-.chip button:hover{opacity:1}
-.chip-empty{font-size:13px;color:var(--text-muted);padding:6px 0}
-.section-label{font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
-.prefs-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
-.pref-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--surface-2);color:var(--text-secondary);cursor:pointer;font-family:var(--font-sans)}
-.pref-btn.active{background:var(--pref-active-bg,var(--bg-success));color:var(--pref-active-text,var(--text-success));border-color:var(--border-success)}
-.generate-btn{width:100%;height:42px;border-radius:var(--radius);border:none;background:var(--fill-accent);color:var(--on-accent);font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:opacity 0.15s}
-.generate-btn:hover{opacity:0.88}
-.generate-btn:disabled{opacity:0.4;cursor:not-allowed}
-/* Collab banner */
-.collab-banner{background:var(--bg-accent);border:0.5px solid var(--border-accent);border-radius:12px;padding:12px 16px;margin-top:1rem;font-size:13px;color:var(--text-accent)}
-.collab-banner strong{display:block;margin-bottom:4px;font-size:14px}
-.collab-link{word-break:break-all;font-size:12px;opacity:0.8;font-family:monospace;margin:6px 0;display:block}
-.collab-info{font-size:12px;color:var(--text-muted);margin-top:4px}
-.collab-btn-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.collab-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border-accent);background:var(--fill-accent);color:var(--on-accent);cursor:pointer;font-family:var(--font-sans)}
-.collab-btn.secondary{background:none;color:var(--text-accent)}
-.collab-merged{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}
-.results{margin-top:1.75rem}
-.results-header{font-size:13px;color:var(--text-muted);margin-bottom:1rem}
-.recipe-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:12px}
-.recipe-name{font-size:16px;font-weight:500;color:var(--text-primary);margin-bottom:6px}
-.recipe-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.meta-pill{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--meta-bg,var(--surface-1));color:var(--meta-text,var(--text-secondary));display:flex;align-items:center;gap:4px}
-.recipe-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px}
-.card-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.expand-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-accent);padding:0;font-family:var(--font-sans)}
-.expand-btn:hover{text-decoration:underline}
-.save-btn{background:none;border:0.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:12px;color:var(--text-muted);padding:4px 10px;font-family:var(--font-sans);display:flex;align-items:center;gap:5px;transition:all 0.15s}
-.save-btn:hover{border-color:var(--border-strong);color:var(--text-secondary)}
-.save-btn.saved{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
-.cook-btn{background:var(--fill-accent);border:none;border-radius:var(--radius);cursor:pointer;font-size:12px;color:var(--on-accent);padding:4px 12px;font-family:var(--font-sans);display:flex;align-items:center;gap:5px}
-.recipe-detail{margin-top:12px;border-top:0.5px solid var(--border);padding-top:12px;display:none}
-.recipe-detail.open{display:block}
-.detail-section{margin-bottom:12px}
-.detail-title{font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
-.detail-list{list-style:none;padding:0}
-.detail-list li{font-size:13px;color:var(--text-secondary);line-height:1.7;padding-left:14px;position:relative}
-.detail-list li::before{content:"·";position:absolute;left:0;color:var(--text-muted)}
-.chef-tip{font-size:13px;color:var(--text-secondary);line-height:1.6;padding-left:14px}
-/* Cook mode overlay */
-.cook-overlay{display:none;position:fixed;inset:0;background:var(--surface-0);z-index:1000;flex-direction:column}
-.cook-overlay.open{display:flex}
-.cook-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:0.5px solid var(--border);flex-shrink:0}
-.cook-title-text{font-size:16px;font-weight:500;color:var(--text-primary)}
-.cook-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--text-muted);font-family:var(--font-sans);padding:0}
-.cook-body{flex:1;overflow-y:auto;padding:2rem 1.5rem;max-width:680px;margin:0 auto;width:100%}
-.cook-progress{display:flex;gap:4px;margin-bottom:2rem;flex-wrap:wrap}
-.cook-pip{width:24px;height:4px;border-radius:2px;background:var(--border-strong);transition:background 0.2s}
-.cook-pip.done{background:var(--fill-accent)}
-.cook-pip.current{background:var(--fill-accent);opacity:0.5}
-.cook-step-num{font-size:12px;font-weight:600;color:var(--text-accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
-.cook-step-text{font-size:18px;line-height:1.7;color:var(--text-primary);margin-bottom:2rem}
-.cook-timer-row{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
-.cook-timer{font-size:32px;font-weight:300;color:var(--text-primary);font-variant-numeric:tabular-nums;letter-spacing:-0.02em}
-.cook-timer-btn{height:36px;padding:0 16px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);font-size:13px;cursor:pointer;font-family:var(--font-sans)}
-.cook-footer{padding:1rem 1.5rem;border-top:0.5px solid var(--border);display:flex;gap:10px;flex-shrink:0;max-width:680px;margin:0 auto;width:100%}
-.cook-nav-btn{flex:1;height:44px;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font-sans);border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary)}
-.cook-nav-btn.primary{background:var(--fill-accent);color:var(--on-accent);border-color:transparent}
-.cook-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
-.cook-done-screen{text-align:center;padding:3rem 0}
-.cook-done-screen .cook-done-icon{font-size:48px;margin-bottom:1rem}
-.cook-done-screen h2{font-size:20px;font-weight:500;color:var(--text-primary);margin-bottom:8px}
-.cook-done-screen p{font-size:14px;color:var(--text-muted)}
-/* Loading */
-.loading-state{text-align:center;padding:2.5rem 0}
-.loading-state p{font-size:14px;color:var(--text-muted);margin-top:8px}
-.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--fill-accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto}
-@keyframes spin{to{transform:rotate(360deg)}}
-.error-msg{font-size:13px;color:#c0392b;background:#fdecea;border-radius:var(--radius);padding:10px 14px;margin-top:1rem}
-/* Recent */
-.recent-empty{text-align:center;padding:4rem 1rem;color:var(--text-muted);font-size:14px;line-height:1.8}
-.recent-empty i{font-size:36px;display:block;margin-bottom:12px;opacity:0.4}
-.recent-header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-.clear-btn{font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;font-family:var(--font-sans);padding:0}
-.clear-btn:hover{color:var(--text-secondary)}
-.recent-date{font-size:11px;color:var(--text-muted);margin-bottom:6px;margin-top:1.25rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
-.recent-date:first-child{margin-top:0}
-/* Install PWA button */
-#install-btn{display:none;font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-secondary);cursor:pointer;font-family:var(--font-sans);align-items:center;gap:5px}
-#install-btn.visible{display:flex}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --surface-0: #f1efe8;
+    --surface-1: #e8e6e0;
+    --surface-2: #ffffff;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.18);
+    --text-primary: #1a1a18;
+    --text-secondary: #4a4a45;
+    --text-muted: #888780;
+    --bg-accent: #e8f0fb;
+    --text-accent: #1a5cc8;
+    --border-accent: #b3ccf5;
+    --fill-accent: #1a5cc8;
+    --on-accent: #ffffff;
+    --bg-success: #e8f5e8;
+    --text-success: #1e6b1e;
+    --border-success: #9fd89f;
+    --radius: 8px;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* Themes */
+  .theme-forest {
+    --surface-0: #1a2e1a; --surface-1: #223322; --surface-2: #2a3d2a;
+    --border: rgba(100,180,100,0.15); --border-strong: rgba(100,180,100,0.3);
+    --text-primary: #e8f5e8; --text-secondary: #9dbf9d; --text-muted: #5a7a5a;
+    --bg-accent: #1e3b1e; --text-accent: #6fcf6f; --border-accent: #3a5c3a;
+    --fill-accent: #4a9e4a; --on-accent: #fff;
+    --bg-success: #1e3b1e; --text-success: #6fcf6f; --border-success: #3a5c3a;
+    --chip-bg: #2a4a2a; --pref-active-bg: #2a4a2a; --pref-active-text: #6fcf6f;
+    --meta-bg: #223322; --meta-text: #9dbf9d;
+  }
+  .theme-sunset {
+    --surface-0: #2d1b0e; --surface-1: #3d2518; --surface-2: #4a2e1e;
+    --border: rgba(180,100,60,0.2); --border-strong: rgba(180,100,60,0.4);
+    --text-primary: #fdebd0; --text-secondary: #c8956a; --text-muted: #8a6045;
+    --bg-accent: #3d2518; --text-accent: #f4a261; --border-accent: #6b3d20;
+    --fill-accent: #e76f51; --on-accent: #fff;
+    --bg-success: #3d2518; --text-success: #f4a261; --border-success: #6b3d20;
+    --chip-bg: #5c3520; --pref-active-bg: #5c3520; --pref-active-text: #f4a261;
+    --meta-bg: #3d2518; --meta-text: #c8956a;
+  }
+  .theme-ocean {
+    --surface-0: #0a1628; --surface-1: #0f2040; --surface-2: #142a50;
+    --border: rgba(79,195,247,0.15); --border-strong: rgba(79,195,247,0.3);
+    --text-primary: #e1f5fe; --text-secondary: #7fb3d3; --text-muted: #3a6a8a;
+    --bg-accent: #0f2040; --text-accent: #4fc3f7; --border-accent: #1a3a6a;
+    --fill-accent: #0288d1; --on-accent: #fff;
+    --bg-success: #0f2040; --text-success: #4fc3f7; --border-success: #1a3a6a;
+    --chip-bg: #0a2a4a; --pref-active-bg: #0a2a4a; --pref-active-text: #4fc3f7;
+    --meta-bg: #0f2040; --meta-text: #7fb3d3;
+  }
+  .theme-lavender {
+    --surface-0: #1a1528; --surface-1: #221e38; --surface-2: #2a2545;
+    --border: rgba(179,157,219,0.15); --border-strong: rgba(179,157,219,0.3);
+    --text-primary: #ede7f6; --text-secondary: #9575cd; --text-muted: #5a4e80;
+    --bg-accent: #221e38; --text-accent: #b39ddb; --border-accent: #3d3560;
+    --fill-accent: #7e57c2; --on-accent: #fff;
+    --bg-success: #221e38; --text-success: #b39ddb; --border-success: #3d3560;
+    --chip-bg: #312a50; --pref-active-bg: #312a50; --pref-active-text: #b39ddb;
+    --meta-bg: #221e38; --meta-text: #9575cd;
+  }
+  .theme-paper {
+    --surface-0: #faf6f0; --surface-1: #f2ece2; --surface-2: #fff;
+    --border: rgba(100,70,40,0.12); --border-strong: rgba(100,70,40,0.25);
+    --text-primary: #2c1810; --text-secondary: #6b4c35; --text-muted: #a08060;
+    --bg-accent: #f0e4d0; --text-accent: #8b5e3c; --border-accent: #c9a07a;
+    --fill-accent: #8b5e3c; --on-accent: #fff;
+    --bg-success: #f0e4d0; --text-success: #8b5e3c; --border-success: #c9a07a;
+    --chip-bg: #f0e4d0; --pref-active-bg: #f0e4d0; --pref-active-text: #8b5e3c;
+    --meta-bg: #f0e4d0; --meta-text: #6b4c35;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--surface-0);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  /* Layout */
+  .shell { max-width: 720px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+  /* Nav */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 0; margin-bottom: 0.5rem; gap: 12px; flex-wrap: wrap;
+  }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab {
+    padding: 7px 16px; border-radius: 20px; font-size: 14px;
+    border: 0.5px solid transparent; cursor: pointer;
+    background: none; color: var(--text-muted); font-family: var(--font-sans);
+    transition: all 0.15s;
+  }
+  .nav-tab.active {
+    background: var(--surface-2); border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+  .nav-tab:not(.active):hover { color: var(--text-secondary); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+
+  select {
+    height: 32px; padding: 0 10px; border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong); background: var(--surface-2);
+    color: var(--text-primary); font-size: 13px; font-family: var(--font-sans); cursor: pointer;
+  }
+  .theme-dots { display: flex; gap: 6px; align-items: center; }
+  .theme-dot {
+    width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+    border: 2.5px solid transparent; transition: border-color 0.15s; flex-shrink: 0;
+  }
+  .theme-dot.active { border-color: var(--text-primary); }
+  .dot-default { background: conic-gradient(#e8e6e1 0deg 90deg,#3d3d3a 90deg 180deg,#e8e6e1 180deg 270deg,#3d3d3a 270deg); }
+  .dot-forest  { background: #4a9e4a; }
+  .dot-sunset  { background: #e76f51; }
+  .dot-ocean   { background: #0288d1; }
+  .dot-lavender{ background: #7e57c2; }
+  .dot-paper   { background: #8b5e3c; }
+
+  /* Page sections */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Header */
+  .page-header { margin-bottom: 1.75rem; }
+  .page-header h1 { font-size: 22px; font-weight: 500; color: var(--text-primary); }
+  .page-header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Ingredient input */
+  .input-row { display: flex; gap: 8px; margin-bottom: 10px; position: relative; }
+  .input-wrap { flex: 1; position: relative; }
+  .input-row input {
+    width: 100%; height: 36px; padding: 0 12px; border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong); background: var(--surface-2);
+    color: var(--text-primary); font-size: 14px; font-family: var(--font-sans);
+  }
+  .input-row input::placeholder { color: var(--text-muted); }
+  .input-row input:focus { outline: none; box-shadow: 0 0 0 2px var(--bg-accent); border-color: var(--border-accent); }
+  .add-btn {
+    height: 36px; padding: 0 16px; border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong); background: var(--surface-2);
+    color: var(--text-primary); font-size: 14px; cursor: pointer; font-family: var(--font-sans);
+    white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  }
+  .add-btn:hover { background: var(--surface-1); }
+
+  /* Autocomplete dropdown */
+  .autocomplete-list {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface-2); border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    max-height: 220px; overflow-y: auto; z-index: 20; display: none;
+  }
+  .autocomplete-list.open { display: block; }
+  .autocomplete-item {
+    padding: 9px 12px; font-size: 13.5px; color: var(--text-primary);
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+  }
+  .autocomplete-item i { color: var(--text-muted); font-size: 14px; }
+  .autocomplete-item:hover, .autocomplete-item.highlighted { background: var(--surface-1); }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px; margin-bottom: 0.85rem; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 12px;
+    border-radius: 20px; background: var(--chip-bg, var(--bg-accent));
+    color: var(--text-accent); font-size: 13px; font-weight: 500;
+    animation: chip-in 0.18s ease;
+  }
+  @keyframes chip-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .chip button {
+    background: none; border: none; cursor: pointer; color: var(--text-accent);
+    padding: 0; line-height: 1; font-size: 16px; opacity: 0.7;
+  }
+  .chip button:hover { opacity: 1; }
+  .chip-empty { font-size: 13px; color: var(--text-muted); padding: 6px 0; }
+
+  /* Pantry staples row */
+  .pantry-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+  .pantry-chip {
+    font-size: 12px; padding: 5px 11px; border-radius: 20px;
+    border: 0.5px dashed var(--border-strong); background: transparent;
+    color: var(--text-muted); cursor: pointer; font-family: var(--font-sans);
+    display: flex; align-items: center; gap: 5px; transition: all 0.15s;
+  }
+  .pantry-chip i { font-size: 12px; }
+  .pantry-chip:hover { color: var(--text-secondary); }
+  .pantry-chip.active {
+    border-style: solid; border-color: var(--border-success);
+    background: var(--pref-active-bg, var(--bg-success));
+    color: var(--pref-active-text, var(--text-success));
+  }
+
+  /* Surprise button */
+  .surprise-row { display: flex; gap: 8px; margin-bottom: 1.25rem; }
+  .surprise-btn {
+    flex: 1; height: 38px; border-radius: var(--radius);
+    border: 0.5px dashed var(--border-strong); background: transparent;
+    color: var(--text-secondary); font-size: 13px; cursor: pointer;
+    font-family: var(--font-sans); display: flex; align-items: center;
+    justify-content: center; gap: 6px; transition: all 0.15s;
+  }
+  .surprise-btn:hover { background: var(--surface-1); color: var(--text-primary); border-style: solid; }
+  .surprise-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .surprise-btn:disabled:hover { background: transparent; border-style: dashed; }
+  .surprise-btn i { font-size: 14px; }
+
+  /* Section label */
+  .section-label {
+    font-size: 12px; font-weight: 500; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+  }
+
+  /* Pref buttons */
+  .prefs-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .pref-btn {
+    font-size: 12px; padding: 5px 12px; border-radius: 20px;
+    border: 0.5px solid var(--border); background: var(--surface-2);
+    color: var(--text-secondary); cursor: pointer; font-family: var(--font-sans);
+  }
+  .pref-btn.active {
+    background: var(--pref-active-bg, var(--bg-success));
+    color: var(--pref-active-text, var(--text-success));
+    border-color: var(--border-success);
+  }
+
+  /* Generate button */
+  .generate-btn {
+    width: 100%; height: 42px; border-radius: var(--radius); border: none;
+    background: var(--fill-accent); color: var(--on-accent); font-size: 15px;
+    font-weight: 500; cursor: pointer; font-family: var(--font-sans); transition: opacity 0.15s;
+  }
+  .generate-btn:hover { opacity: 0.88; }
+  .generate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Results */
+  .results { margin-top: 1.75rem; }
+  .results-header { font-size: 13px; color: var(--text-muted); margin-bottom: 1rem; }
+
+  /* Recipe card */
+  .recipe-card {
+    background: var(--surface-2); border: 0.5px solid var(--border);
+    border-radius: 12px; padding: 1.25rem; margin-bottom: 12px;
+  }
+  .recipe-name { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
+  .recipe-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .meta-pill {
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    background: var(--meta-bg, var(--surface-1)); color: var(--meta-text, var(--text-secondary));
+    display: flex; align-items: center; gap: 4px;
+  }
+  .recipe-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
+  .card-actions { display: flex; gap: 10px; align-items: center; }
+  .expand-btn {
+    background: none; border: none; cursor: pointer; font-size: 12px;
+    color: var(--text-accent); padding: 0; font-family: var(--font-sans);
+  }
+  .expand-btn:hover { text-decoration: underline; }
+  .save-btn {
+    background: none; border: 0.5px solid var(--border); border-radius: var(--radius);
+    cursor: pointer; font-size: 12px; color: var(--text-muted); padding: 4px 10px;
+    font-family: var(--font-sans); display: flex; align-items: center; gap: 5px;
+    transition: all 0.15s;
+  }
+  .save-btn:hover { border-color: var(--border-strong); color: var(--text-secondary); }
+  .save-btn.saved { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+
+  .recipe-detail {
+    margin-top: 12px; border-top: 0.5px solid var(--border);
+    padding-top: 12px; display: none;
+  }
+  .recipe-detail.open { display: block; }
+  .detail-section { margin-bottom: 12px; }
+  .detail-title {
+    font-size: 11px; font-weight: 500; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
+  }
+  .detail-list { list-style: none; padding: 0; }
+  .detail-list li {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+    padding-left: 14px; position: relative;
+  }
+  .detail-list li::before { content: "·"; position: absolute; left: 0; color: var(--text-muted); }
+  .chef-tip { font-size: 13px; color: var(--text-secondary); line-height: 1.6; padding-left: 14px; }
+
+  /* Loading */
+  .loading-state { text-align: center; padding: 2.5rem 0; }
+  .loading-state p { font-size: 14px; color: var(--text-muted); margin-top: 8px; }
+  .spinner {
+    width: 28px; height: 28px; border: 2px solid var(--border);
+    border-top-color: var(--fill-accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg {
+    font-size: 13px; color: #c0392b; background: #fdecea;
+    border-radius: var(--radius); padding: 10px 14px; margin-top: 1rem;
+  }
+
+  /* Recent page */
+  .recent-empty {
+    text-align: center; padding: 4rem 1rem;
+    color: var(--text-muted); font-size: 14px; line-height: 1.8;
+  }
+  .recent-empty i { font-size: 36px; display: block; margin-bottom: 12px; opacity: 0.4; }
+  .recent-header-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
+  }
+  .clear-btn {
+    font-size: 12px; color: var(--text-muted); background: none; border: none;
+    cursor: pointer; font-family: var(--font-sans); padding: 0;
+  }
+  .clear-btn:hover { color: var(--text-secondary); }
+  .recent-date {
+    font-size: 11px; color: var(--text-muted); margin-bottom: 6px;
+    margin-top: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+  .recent-date:first-child { margin-top: 0; }
+  .recent-tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 20px;
+    background: var(--bg-accent); color: var(--text-accent);
+    display: inline-block; margin-left: 6px;
+  }
+
+  /* Share / export icon button on cards */
+  .icon-btn {
+    background: none; border: 0.5px solid var(--border); border-radius: var(--radius);
+    cursor: pointer; font-size: 12px; color: var(--text-muted); padding: 4px 8px;
+    font-family: var(--font-sans); display: flex; align-items: center; gap: 5px;
+    transition: all 0.15s;
+  }
+  .icon-btn:hover { border-color: var(--border-strong); color: var(--text-secondary); }
+  .icon-btn.flash { background: var(--bg-success); color: var(--text-success); border-color: var(--border-success); }
+
+  /* Import/export row on Recent page */
+  .io-row { display: flex; gap: 8px; margin-bottom: 1.25rem; }
+  .io-btn {
+    flex: 1; height: 36px; border-radius: var(--radius);
+    border: 0.5px solid var(--border); background: var(--surface-2);
+    color: var(--text-secondary); font-size: 13px; cursor: pointer;
+    font-family: var(--font-sans); display: flex; align-items: center;
+    justify-content: center; gap: 6px; transition: all 0.15s;
+  }
+  .io-btn:hover { background: var(--surface-1); color: var(--text-primary); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px);
+    background: var(--text-primary); color: var(--surface-0);
+    padding: 10px 18px; border-radius: 20px; font-size: 13px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18); opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s; z-index: 200; white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
+  /* Shared recipe overlay view */
+  .shared-overlay {
+    position: fixed; inset: 0; background: var(--surface-0); z-index: 100;
+    overflow-y: auto; display: none;
+  }
+  .shared-overlay.open { display: block; }
+  .shared-shell { max-width: 560px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+  .shared-banner {
+    display: flex; align-items: center; gap: 8px; font-size: 13px;
+    color: var(--text-muted); margin-bottom: 1.5rem;
+  }
+  .shared-banner i { color: var(--fill-accent); font-size: 16px; }
+  .shared-actions { display: flex; gap: 10px; margin-top: 1.25rem; }
+  .shared-actions .generate-btn { flex: 1; }
+  .shared-dismiss {
+    background: none; border: 0.5px solid var(--border-strong); border-radius: var(--radius);
+    color: var(--text-secondary); font-size: 14px; cursor: pointer; font-family: var(--font-sans);
+    padding: 0 16px; height: 42px;
+  }
+  .shared-dismiss:hover { background: var(--surface-1); }
+  .shared-invalid { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-size: 14px; }
+
+  /* Confetti */
+  .confetti-layer {
+    position: fixed; inset: 0; pointer-events: none; z-index: 300; overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute; top: -10px; width: 8px; height: 8px; opacity: 0.9;
+    animation: confetti-fall linear forwards;
+  }
+  @keyframes confetti-fall {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
+  }
+
+  /* Cook mode */
+  .cook-overlay {
+    position: fixed; inset: 0; background: var(--surface-0); z-index: 150;
+    display: none; flex-direction: column;
+  }
+  .cook-overlay.open { display: flex; }
+  .cook-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.25rem; border-bottom: 0.5px solid var(--border);
+  }
+  .cook-progress-text { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .cook-exit-btn {
+    background: none; border: none; color: var(--text-muted); cursor: pointer;
+    font-size: 22px; padding: 4px; line-height: 1; font-family: var(--font-sans);
+  }
+  .cook-exit-btn:hover { color: var(--text-primary); }
+  .cook-progress-bar {
+    height: 3px; background: var(--border); position: relative; overflow: hidden;
+  }
+  .cook-progress-fill {
+    position: absolute; left: 0; top: 0; bottom: 0; background: var(--fill-accent);
+    transition: width 0.25s ease;
+  }
+  .cook-body {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    padding: 2rem 1.5rem; max-width: 560px; margin: 0 auto; width: 100%;
+    box-sizing: border-box; text-align: center;
+  }
+  .cook-recipe-name { font-size: 13px; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .cook-step-text {
+    font-size: 21px; line-height: 1.5; color: var(--text-primary); font-weight: 450;
+    margin-bottom: 1.75rem;
+  }
+  .cook-timer-wrap { margin-bottom: 1.75rem; }
+  .cook-timer-display {
+    font-size: 38px; font-weight: 600; color: var(--text-accent); font-variant-numeric: tabular-nums;
+    margin-bottom: 10px;
+  }
+  .cook-timer-btn {
+    height: 40px; padding: 0 20px; border-radius: 20px; border: 0.5px solid var(--border-accent);
+    background: var(--bg-accent); color: var(--text-accent); font-size: 14px; cursor: pointer;
+    font-family: var(--font-sans); display: inline-flex; align-items: center; gap: 6px;
+  }
+  .cook-timer-btn:hover { opacity: 0.85; }
+  .cook-timer-btn.running { background: var(--surface-1); color: var(--text-secondary); border-color: var(--border); cursor: default; }
+  .cook-nav { display: flex; gap: 10px; padding: 1.25rem 1.5rem 2rem; max-width: 560px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+  .cook-nav-btn {
+    flex: 1; height: 46px; border-radius: var(--radius); cursor: pointer; font-size: 15px;
+    font-family: var(--font-sans); font-weight: 500; display: flex; align-items: center;
+    justify-content: center; gap: 6px; border: none;
+  }
+  .cook-nav-btn.prev { background: var(--surface-2); color: var(--text-secondary); border: 0.5px solid var(--border-strong); }
+  .cook-nav-btn.prev:hover { background: var(--surface-1); }
+  .cook-nav-btn.next { background: var(--fill-accent); color: var(--on-accent); }
+  .cook-nav-btn.next:hover { opacity: 0.88; }
+  .cook-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .cook-finished { font-size: 17px; color: var(--text-primary); margin-bottom: 1.5rem; }
+
+  /* Fridge-merge overlay (shared ingredients link) */
+  .merge-overlay {
+    position: fixed; inset: 0; background: var(--surface-0); z-index: 100;
+    overflow-y: auto; display: none;
+  }
+  .merge-overlay.open { display: block; }
+  .merge-shell { max-width: 560px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+  .merge-chip-preview { display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0 1.5rem; }
 </style>
 </head>
 <body class="theme-default">
-
-<!-- Cook mode overlay -->
-<div class="cook-overlay" id="cook-overlay" role="dialog" aria-modal="true">
-  <div class="cook-header">
-    <div>
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:2px" id="cook-recipe-name"></div>
-      <div class="cook-title-text" id="cook-header-label">Cook mode</div>
-    </div>
-    <button class="cook-close" onclick="closeCookMode()" aria-label="Close">✕</button>
-  </div>
-  <div class="cook-body">
-    <div class="cook-progress" id="cook-progress"></div>
-    <div id="cook-step-content"></div>
-  </div>
-  <div class="cook-footer">
-    <button class="cook-nav-btn" id="cook-prev-btn" onclick="cookNav(-1)" disabled>← Prev</button>
-    <button class="cook-nav-btn primary" id="cook-next-btn" onclick="cookNav(1)">Next →</button>
-  </div>
-</div>
-
 <div class="shell">
+
   <nav>
     <div style="display:flex;align-items:center;gap:16px">
       <div style="font-size:18px;font-weight:600;color:var(--text-primary);letter-spacing:-0.02em">
         <span style="color:var(--fill-accent)">F</span>ridgify
       </div>
       <div class="nav-tabs">
-        <button class="nav-tab active" onclick="showPage('generator')" id="tab-generator">Generator</button>
-        <button class="nav-tab" onclick="showPage('recent')" id="tab-recent">Recent</button>
+        <button class="nav-tab active" onclick="showPage('generator')" id="tab-generator"></button>
+        <button class="nav-tab" onclick="showPage('recent')" id="tab-recent"></button>
       </div>
     </div>
     <div class="nav-right">
-      <button id="install-btn" onclick="installPWA()"><i class="ti ti-download" aria-hidden="true"></i> Install</button>
       <select id="lang-select" onchange="setLang(this.value)">
         <option value="en">🇬🇧 English</option>
         <option value="bg">🇧🇬 Български</option>
@@ -195,160 +520,955 @@ select{height:32px;padding:0 10px;border-radius:var(--radius);border:0.5px solid
   <!-- Generator page -->
   <div class="page active" id="page-generator">
     <div class="page-header">
-      <h1 id="ui-title">What's in your fridge?</h1>
-      <p id="ui-subtitle">Add your ingredients and Fridgify will find what you can make.</p>
+      <h1 id="ui-title">What can I make?</h1>
+      <p id="ui-subtitle">Enter the ingredients you have and get meal ideas.</p>
     </div>
+
     <div class="input-row">
-      <input id="ing-input" type="text" maxlength="60" />
+      <div class="input-wrap">
+        <input id="ing-input" type="text" maxlength="60" autocomplete="off" />
+        <div class="autocomplete-list" id="autocomplete-list"></div>
+      </div>
       <button class="add-btn" onclick="addIngredient()">
         <i class="ti ti-plus" aria-hidden="true"></i>
         <span id="ui-add">Add</span>
       </button>
     </div>
     <div class="chips" id="chips"></div>
+
+    <div class="pantry-row" id="pantry-row"></div>
+
+    <div class="surprise-row">
+      <button class="surprise-btn" onclick="surpriseMe()">
+        <i class="ti ti-sparkles" aria-hidden="true"></i>
+        <span id="ui-surprise">Surprise me</span>
+      </button>
+      <button class="surprise-btn" onclick="shareFridgeContents()" id="share-fridge-btn">
+        <i class="ti ti-share-2" aria-hidden="true"></i>
+        <span id="ui-share-fridge">Share my fridge</span>
+      </button>
+    </div>
+
     <div class="section-label" id="ui-diet-label">Diet</div>
     <div class="prefs-row" id="prefs-row"></div>
+
     <button class="generate-btn" id="gen-btn" onclick="generate()" disabled></button>
-    <!-- Collab section -->
-    <div id="collab-section" style="margin-top:1.25rem"></div>
     <div id="results"></div>
   </div>
 
   <!-- Recent page -->
   <div class="page" id="page-recent">
     <div class="page-header">
-      <h1 id="ui-recent-title">Saved recipes</h1>
-      <p id="ui-recent-subtitle">Recipes you've bookmarked for later.</p>
+      <h1 id="ui-recent-title">Recent recipes</h1>
+      <p id="ui-recent-subtitle">Recipes you've saved from past sessions.</p>
+    </div>
+    <div class="io-row">
+      <button class="io-btn" onclick="exportAll()">
+        <i class="ti ti-download" aria-hidden="true"></i>
+        <span id="ui-export-all">Export all</span>
+      </button>
+      <button class="io-btn" onclick="document.getElementById('import-file').click()">
+        <i class="ti ti-upload" aria-hidden="true"></i>
+        <span id="ui-import">Import</span>
+      </button>
+      <input type="file" id="import-file" accept=".fridgify,.json" style="display:none" onchange="handleImportFile(event)" />
     </div>
     <div id="recent-content"></div>
   </div>
+
 </div>
 
+<!-- Shared recipe overlay (opened via a Fridgify share link) -->
+<div class="shared-overlay" id="shared-overlay">
+  <div class="shared-shell" id="shared-shell"></div>
+</div>
+
+<!-- Fridge-merge overlay (opened via a "share my fridge" link) -->
+<div class="merge-overlay" id="merge-overlay">
+  <div class="merge-shell" id="merge-shell"></div>
+</div>
+
+<!-- Cook mode: full-screen step-by-step view -->
+<div class="cook-overlay" id="cook-overlay">
+  <div class="cook-top">
+    <span class="cook-progress-text" id="cook-progress-text"></span>
+    <button class="cook-exit-btn" onclick="exitCookMode()" aria-label="Exit">×</button>
+  </div>
+  <div class="cook-progress-bar"><div class="cook-progress-fill" id="cook-progress-fill"></div></div>
+  <div class="cook-body" id="cook-body"></div>
+  <div class="cook-nav" id="cook-nav"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-/* ─── Language strings ──────────────────────────────────────────────── */
+/* ── Language strings ─────────────────────────────────────────────────── */
 const LANGS = {
-  en:{title:"What's in your fridge?",subtitle:"Add your ingredients and Fridgify will find what you can make.",add:"Add",placeholder:"e.g. chicken, lemon, garlic…",empty:"No ingredients yet — add some above",diet:"Diet",prefs:["Vegetarian","Vegan","Gluten-free","Dairy-free","Quick (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Add ingredients to get ideas",btnReady:n=>`Fridgify ${n} ingredient${n>1?'s':''} ↗`,btnLoading:"Fridgifying…",results:n=>`${n} recipes from your fridge`,expand:"Show steps & tips ↓",collapse:"Hide ↑",save:"Save",saved:"Saved",cook:"Cook",ingredients:"Ingredients",steps:"Steps",tip:"Chef's tip",error:"Couldn't load recipes — please try again.",loading:"Raiding your fridge…",recentTitle:"Saved recipes",recentSubtitle:"Recipes you've bookmarked for later.",recentEmpty:"No saved recipes yet.\nGenerate some and bookmark the ones you like.",clearAll:"Clear all",goGen:"Go to generator ↗",collabTitle:"Cook together",collabDesc:"Share a link with a friend — they add their ingredients, and Fridgify combines both lists.",collabShare:"Get my share link",collabWaiting:"Waiting for your friend to add their ingredients…",collabLink:"Your share link:",collabCopy:"Copy link",collabCopied:"Copied!",collabFriendAdded:"Friend's ingredients merged in!",collabGenerate:"Generate with combined fridge",collabFriendCount:n=>`+${n} from your friend`,cookMode:"Cook mode",cookStep:(i,n)=>`Step ${i} of ${n}`,cookDone:"All done! 🎉",cookDoneMsg:"Enjoy your meal.",prevStep:"← Back",nextStep:"Next →",finishCook:"Finish"},
-  bg:{title:"Какво има в хладилника?",subtitle:"Добави съставките и Fridgify ще намери какво можеш да приготвиш.",add:"Добави",placeholder:"напр. пиле, лимон, чесън…",empty:"Все още няма съставки — добави по-горе",diet:"Диета",prefs:["Вегетарианско","Веганско","Без глутен","Без лактоза","Бързо (<30 мин)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Добави съставки за идеи",btnReady:n=>`Fridgify с ${n} съставк${n===1?'а':'и'} ↗`,btnLoading:"Fridgify търси…",results:n=>`${n} рецепти от хладилника ти`,expand:"Покажи стъпките ↓",collapse:"Скрий ↑",save:"Запази",saved:"Запазено",cook:"Готви",ingredients:"Съставки",steps:"Стъпки",tip:"Съвет на готвача",error:"Неуспешно зареждане — опитай пак.",loading:"Претърсвам хладилника…",recentTitle:"Запазени рецепти",recentSubtitle:"Рецепти, които си отбелязал за по-късно.",recentEmpty:"Няма запазени рецепти.\nГенерирай и запази тези, които харесваш.",clearAll:"Изчисти всички",goGen:"Към генератора ↗",collabTitle:"Гответе заедно",collabDesc:"Сподели линк с приятел — той добавя своите съставки, а Fridgify обединява двата списъка.",collabShare:"Вземи линк за споделяне",collabWaiting:"Изчаква се приятелят ти да добави своите съставки…",collabLink:"Твоят линк:",collabCopy:"Копирай",collabCopied:"Копирано!",collabFriendAdded:"Съставките на приятеля ти са добавени!",collabGenerate:"Генерирай с общия хладилник",collabFriendCount:n=>`+${n} от приятеля ти`,cookMode:"Режим на готвене",cookStep:(i,n)=>`Стъпка ${i} от ${n}`,cookDone:"Готово! 🎉",cookDoneMsg:"Приятен апетит!",prevStep:"← Назад",nextStep:"Напред →",finishCook:"Приключи"},
-  es:{title:"¿Qué hay en tu nevera?",subtitle:"Añade tus ingredientes y Fridgify descubre qué puedes cocinar.",add:"Añadir",placeholder:"p. ej. pollo, limón, ajo…",empty:"Sin ingredientes aún — añade alguno arriba",diet:"Dieta",prefs:["Vegetariano","Vegano","Sin gluten","Sin lácteos","Rápido (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Añade ingredientes para buscar ideas",btnReady:n=>`Fridgify con ${n} ingrediente${n>1?'s':''} ↗`,btnLoading:"Fridgificando…",results:n=>`${n} recetas de tu nevera`,expand:"Ver pasos ↓",collapse:"Ocultar ↑",save:"Guardar",saved:"Guardado",cook:"Cocinar",ingredients:"Ingredientes",steps:"Pasos",tip:"Consejo del chef",error:"Error al cargar recetas.",loading:"Revisando tu nevera…",recentTitle:"Recetas guardadas",recentSubtitle:"Recetas marcadas para más tarde.",recentEmpty:"Sin recetas guardadas.\nGenera algunas y guarda las que te gusten.",clearAll:"Borrar todo",goGen:"Ir al generador ↗",collabTitle:"Cocinar juntos",collabDesc:"Comparte un enlace con un amigo — añade sus ingredientes y Fridgify combina ambas listas.",collabShare:"Obtener enlace",collabWaiting:"Esperando a que tu amigo añada sus ingredientes…",collabLink:"Tu enlace:",collabCopy:"Copiar",collabCopied:"¡Copiado!",collabFriendAdded:"¡Ingredientes del amigo añadidos!",collabGenerate:"Generar con la nevera combinada",collabFriendCount:n=>`+${n} de tu amigo`,cookMode:"Modo cocina",cookStep:(i,n)=>`Paso ${i} de ${n}`,cookDone:"¡Listo! 🎉",cookDoneMsg:"¡Buen provecho!",prevStep:"← Atrás",nextStep:"Siguiente →",finishCook:"Terminar"},
-  fr:{title:"Qu'y a-t-il dans ton frigo ?",subtitle:"Ajoute tes ingrédients et Fridgify trouve ce que tu peux cuisiner.",add:"Ajouter",placeholder:"ex. poulet, citron, ail…",empty:"Pas encore d'ingrédients — ajoutes-en ci-dessus",diet:"Régime",prefs:["Végétarien","Végétalien","Sans gluten","Sans lactose","Rapide (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Ajoute des ingrédients pour obtenir des idées",btnReady:n=>`Fridgify avec ${n} ingrédient${n>1?'s':''} ↗`,btnLoading:"Fridgification…",results:n=>`${n} recettes depuis ton frigo`,expand:"Voir les étapes ↓",collapse:"Masquer ↑",save:"Sauvegarder",saved:"Sauvegardé",cook:"Cuisiner",ingredients:"Ingrédients",steps:"Étapes",tip:"Conseil du chef",error:"Impossible de charger — réessaie.",loading:"Fouillons le frigo…",recentTitle:"Recettes sauvegardées",recentSubtitle:"Recettes mises de côté pour plus tard.",recentEmpty:"Aucune recette sauvegardée.\nGénères-en et sauvegarde celles qui te plaisent.",clearAll:"Tout effacer",goGen:"Aller au générateur ↗",collabTitle:"Cuisiner ensemble",collabDesc:"Partage un lien avec un ami — il ajoute ses ingrédients, Fridgify combine les deux listes.",collabShare:"Obtenir un lien de partage",collabWaiting:"En attente des ingrédients de ton ami…",collabLink:"Ton lien :",collabCopy:"Copier",collabCopied:"Copié !",collabFriendAdded:"Ingrédients de l'ami ajoutés !",collabGenerate:"Générer avec le frigo combiné",collabFriendCount:n=>`+${n} de ton ami`,cookMode:"Mode cuisine",cookStep:(i,n)=>`Étape ${i} sur ${n}`,cookDone:"C'est prêt ! 🎉",cookDoneMsg:"Bon appétit !",prevStep:"← Précédent",nextStep:"Suivant →",finishCook:"Terminer"},
-  de:{title:"Was steckt in deinem Kühlschrank?",subtitle:"Zutaten eingeben und Fridgify findet, was du kochen kannst.",add:"Hinzufügen",placeholder:"z.B. Hähnchen, Zitrone, Knoblauch…",empty:"Noch keine Zutaten",diet:"Ernährung",prefs:["Vegetarisch","Vegan","Glutenfrei","Laktosefrei","Schnell (<30 Min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Zutaten hinzufügen",btnReady:n=>`Fridgify mit ${n} Zutat${n>1?'en':''} ↗`,btnLoading:"Fridgify sucht…",results:n=>`${n} Rezepte`,expand:"Schritte anzeigen ↓",collapse:"Ausblenden ↑",save:"Speichern",saved:"Gespeichert",cook:"Kochen",ingredients:"Zutaten",steps:"Schritte",tip:"Tipp",error:"Fehler — bitte erneut versuchen.",loading:"Kühlschrank wird durchsucht…",recentTitle:"Gespeicherte Rezepte",recentSubtitle:"Für später gespeichert.",recentEmpty:"Noch keine gespeicherten Rezepte.",clearAll:"Alle löschen",goGen:"Zum Generator ↗",collabTitle:"Zusammen kochen",collabDesc:"Teile einen Link mit einem Freund — er fügt seine Zutaten hinzu, Fridgify kombiniert beide Listen.",collabShare:"Link holen",collabWaiting:"Warte auf die Zutaten deines Freundes…",collabLink:"Dein Link:",collabCopy:"Kopieren",collabCopied:"Kopiert!",collabFriendAdded:"Zutaten des Freundes hinzugefügt!",collabGenerate:"Mit kombiniertem Kühlschrank generieren",collabFriendCount:n=>`+${n} von deinem Freund`,cookMode:"Koch-Modus",cookStep:(i,n)=>`Schritt ${i} von ${n}`,cookDone:"Fertig! 🎉",cookDoneMsg:"Guten Appetit!",prevStep:"← Zurück",nextStep:"Weiter →",finishCook:"Beenden"},
-  it:{title:"Cosa c'è nel tuo frigo?",subtitle:"Aggiungi gli ingredienti e Fridgify trova cosa puoi cucinare.",add:"Aggiungi",placeholder:"es. pollo, limone, aglio…",empty:"Nessun ingrediente ancora",diet:"Dieta",prefs:["Vegetariano","Vegano","Senza glutine","Senza lattosio","Veloce (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Aggiungi ingredienti",btnReady:n=>`Fridgify con ${n} ingredient${n>1?'i':'e'} ↗`,btnLoading:"Fridgify in azione…",results:n=>`${n} ricette`,expand:"Mostra i passi ↓",collapse:"Nascondi ↑",save:"Salva",saved:"Salvato",cook:"Cucina",ingredients:"Ingredienti",steps:"Passaggi",tip:"Consiglio",error:"Impossibile caricare — riprova.",loading:"Rovistando nel frigo…",recentTitle:"Ricette salvate",recentSubtitle:"Messe da parte per dopo.",recentEmpty:"Nessuna ricetta salvata.",clearAll:"Cancella tutto",goGen:"Vai al generatore ↗",collabTitle:"Cucinare insieme",collabDesc:"Condividi un link con un amico — aggiunge i suoi ingredienti e Fridgify combina entrambe le liste.",collabShare:"Ottieni link di condivisione",collabWaiting:"In attesa degli ingredienti dell'amico…",collabLink:"Il tuo link:",collabCopy:"Copia",collabCopied:"Copiato!",collabFriendAdded:"Ingredienti dell'amico aggiunti!",collabGenerate:"Genera con il frigo combinato",collabFriendCount:n=>`+${n} dall'amico`,cookMode:"Modalità cucina",cookStep:(i,n)=>`Passo ${i} di ${n}`,cookDone:"Fatto! 🎉",cookDoneMsg:"Buon appetito!",prevStep:"← Indietro",nextStep:"Avanti →",finishCook:"Fine"},
-  zh:{title:"冰箱里有什么？",subtitle:"添加你的食材，Fridgify 帮你找到能做的菜。",add:"添加",placeholder:"例如：鸡肉、柠檬、大蒜…",empty:"还没有食材",diet:"饮食",prefs:["素食","纯素","无麸质","无乳糖","快速（30分钟内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"添加食材以获取菜谱",btnReady:n=>`用 ${n} 种食材 Fridgify ↗`,btnLoading:"Fridgify 搜索中…",results:n=>`${n} 道菜`,expand:"查看步骤 ↓",collapse:"收起 ↑",save:"保存",saved:"已保存",cook:"开始做",ingredients:"食材",steps:"步骤",tip:"厨师建议",error:"加载失败，请重试。",loading:"正在翻冰箱…",recentTitle:"已保存的菜谱",recentSubtitle:"你收藏的菜谱。",recentEmpty:"还没有保存的菜谱。",clearAll:"清除全部",goGen:"前往生成器 ↗",collabTitle:"一起做饭",collabDesc:"把链接分享给朋友，他们添加自己的食材，Fridgify 合并两个列表。",collabShare:"获取分享链接",collabWaiting:"等待朋友添加他们的食材…",collabLink:"你的链接：",collabCopy:"复制",collabCopied:"已复制！",collabFriendAdded:"朋友的食材已合并！",collabGenerate:"用合并的冰箱生成菜谱",collabFriendCount:n=>`来自朋友的 +${n} 种`,cookMode:"烹饪模式",cookStep:(i,n)=>`第 ${i} 步，共 ${n} 步`,cookDone:"完成！🎉",cookDoneMsg:"祝您用餐愉快！",prevStep:"← 上一步",nextStep:"下一步 →",finishCook:"完成"},
-  ja:{title:"冷蔵庫に何がある？",subtitle:"食材を入力して、Fridgify が作れる料理を見つけます。",add:"追加",placeholder:"例：鶏肉、レモン、にんにく…",empty:"まだ食材がありません",diet:"食事制限",prefs:["ベジタリアン","ヴィーガン","グルテンフリー","乳製品なし","時短（30分以内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"食材を追加",btnReady:n=>`${n}つの食材で Fridgify ↗`,btnLoading:"Fridgify 検索中…",results:n=>`${n} 件のレシピ`,expand:"手順を見る ↓",collapse:"閉じる ↑",save:"保存",saved:"保存済み",cook:"調理",ingredients:"材料",steps:"手順",tip:"シェフのヒント",error:"読み込めませんでした。",loading:"冷蔵庫を漁っています…",recentTitle:"保存済みレシピ",recentSubtitle:"あとで見るために保存したレシピ。",recentEmpty:"保存されたレシピはありません。",clearAll:"全て削除",goGen:"ジェネレーターへ ↗",collabTitle:"一緒に料理",collabDesc:"友達にリンクを共有して — 食材を追加してもらい、Fridgify が両方のリストを合体させます。",collabShare:"共有リンクを取得",collabWaiting:"友達が食材を追加するのを待っています…",collabLink:"あなたのリンク：",collabCopy:"コピー",collabCopied:"コピーしました！",collabFriendAdded:"友達の食材が追加されました！",collabGenerate:"合体した冷蔵庫でレシピ生成",collabFriendCount:n=>`友達から +${n}`,cookMode:"調理モード",cookStep:(i,n)=>`ステップ ${i}/${n}`,cookDone:"完成！🎉",cookDoneMsg:"お召し上がりください。",prevStep:"← 前へ",nextStep:"次へ →",finishCook:"終了"},
+  en:{title:"What's in your fridge?",subtitle:"Add your ingredients and Fridgify will find what you can make.",add:"Add",placeholder:"e.g. chicken, lemon, garlic…",empty:"No ingredients yet — add some above",diet:"Diet",prefs:["Vegetarian","Vegan","Gluten-free","Dairy-free","Quick (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Add ingredients to get ideas",btnReady:n=>`Fridgify ${n} ingredient${n>1?'s':''} ↗`,btnLoading:"Fridgifying…",results:n=>`${n} recipes from your fridge`,expand:"Show steps & tips ↓",collapse:"Hide ↑",save:"Save",saved:"Saved",ingredients:"Ingredients",steps:"Steps",tip:"Chef's tip",error:"Couldn't load recipes — please try again.",loading:"Raiding your fridge…",recentTitle:"Saved recipes",recentSubtitle:"Recipes you've bookmarked for later.",recentEmpty:"No saved recipes yet.\nGenerate some and bookmark the ones you like.",clearAll:"Clear all",goGen:"Go to generator ↗",surprise:"Surprise me",pantryLabel:"Pantry staples",tabGenerator:"Generator",tabRecent:"Recent",savedCount:n=>`${n} saved`,confirmClear:"Clear all saved recipes?",exportAll:"Export all",import:"Import",share:"Share",toastCopied:"Link copied to clipboard",toastImported:n=>`Imported ${n} recipe${n>1?'s':''}`,toastImportError:"That file isn't a valid Fridgify file",toastExported:"Recipes exported",sharedBanner:"Someone shared this recipe with you via Fridgify",sharedAdd:"Save to my recipes",sharedDismiss:"Open Fridgify",sharedInvalid:"This share link looks broken or incomplete.",cookMode:"Cook",cookStepOf:(a,b)=>`Step ${a} of ${b}`,cookDone:"Done cooking",cookExit:"Exit",cookStartTimer:"Start timer",cookTimerRunning:"Timer running…",cookNext:"Next",cookPrev:"Back",cookFinished:"Nice work — enjoy your meal! 🎉",shareFridge:"Share my fridge",mergeBanner:"Someone shared their fridge with you via Fridgify",mergeAdd:"Add their ingredients to mine",mergeDismiss:"No thanks",mergeAdded:n=>`Added ${n} ingredient${n>1?'s':''}`},
+  bg:{title:"Какво има в хладилника?",subtitle:"Добави съставките и Fridgify ще намери какво можеш да приготвиш.",add:"Добави",placeholder:"напр. пиле, лимон, чесън…",empty:"Все още няма съставки — добави по-горе",diet:"Диета",prefs:["Вегетарианско","Веганско","Без глутен","Без лактоза","Бързо (<30 мин)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Добави съставки за идеи",btnReady:n=>`Fridgify с ${n} съставк${n===1?'а':'и'} ↗`,btnLoading:"Fridgify търси…",results:n=>`${n} рецепти от хладилника ти`,expand:"Покажи стъпките ↓",collapse:"Скрий ↑",save:"Запази",saved:"Запазено",ingredients:"Съставки",steps:"Стъпки",tip:"Съвет на готвача",error:"Неуспешно зареждане — опитай пак.",loading:"Претърсвам хладилника…",recentTitle:"Запазени рецепти",recentSubtitle:"Рецепти, които си отбелязал за по-късно.",recentEmpty:"Няма запазени рецепти.\nГенерирай и запази тези, които харесваш.",clearAll:"Изчисти всички",goGen:"Към генератора ↗",surprise:"Изненадай ме",pantryLabel:"Основни продукти",tabGenerator:"Генератор",tabRecent:"Скорошни",savedCount:n=>`${n} запазени`,confirmClear:"Изчистване на всички запазени рецепти?",exportAll:"Изнеси всички",import:"Внеси",share:"Сподели",toastCopied:"Връзката е копирана",toastImported:n=>`Внесени ${n} рецепти`,toastImportError:"Този файл не е валиден Fridgify файл",toastExported:"Рецептите са изнесени",sharedBanner:"Някой сподели тази рецепта с теб през Fridgify",sharedAdd:"Запази в моите рецепти",sharedDismiss:"Отвори Fridgify",sharedInvalid:"Тази връзка изглежда повредена или непълна.",cookMode:"Готви",cookStepOf:(a,b)=>`Стъпка ${a} от ${b}`,cookDone:"Готово",cookExit:"Изход",cookStartTimer:"Стартирай таймер",cookTimerRunning:"Таймерът работи…",cookNext:"Напред",cookPrev:"Назад",cookFinished:"Браво — приятно хранене! 🎉",shareFridge:"Сподели хладилника ми",mergeBanner:"Някой сподели хладилника си с теб през Fridgify",mergeAdd:"Добави техните съставки към моите",mergeDismiss:"Не, благодаря",mergeAdded:n=>`Добавени ${n} съставки`},
+  es:{title:"¿Qué hay en tu nevera?",subtitle:"Añade tus ingredientes y Fridgify descubre qué puedes cocinar.",add:"Añadir",placeholder:"p. ej. pollo, limón, ajo…",empty:"Sin ingredientes aún — añade alguno arriba",diet:"Dieta",prefs:["Vegetariano","Vegano","Sin gluten","Sin lácteos","Rápido (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Añade ingredientes para buscar ideas",btnReady:n=>`Fridgify con ${n} ingrediente${n>1?'s':''} ↗`,btnLoading:"Fridgificando…",results:n=>`${n} recetas de tu nevera`,expand:"Ver pasos ↓",collapse:"Ocultar ↑",save:"Guardar",saved:"Guardado",ingredients:"Ingredientes",steps:"Pasos",tip:"Consejo del chef",error:"Error al cargar recetas — inténtalo de nuevo.",loading:"Revisando tu nevera…",recentTitle:"Recetas guardadas",recentSubtitle:"Recetas que has marcado para más tarde.",recentEmpty:"Sin recetas guardadas aún.\nGenera algunas y guarda las que te gusten.",clearAll:"Borrar todo",goGen:"Ir al generador ↗",surprise:"Sorpréndeme",pantryLabel:"Básicos de despensa",tabGenerator:"Generador",tabRecent:"Reciente",savedCount:n=>`${n} guardada${n>1?'s':''}`,confirmClear:"¿Borrar todas las recetas guardadas?",exportAll:"Exportar todo",import:"Importar",share:"Compartir",toastCopied:"Enlace copiado",toastImported:n=>`${n} receta${n>1?'s':''} importada${n>1?'s':''}`,toastImportError:"Ese archivo no es un archivo Fridgify válido",toastExported:"Recetas exportadas",sharedBanner:"Alguien compartió esta receta contigo mediante Fridgify",sharedAdd:"Guardar en mis recetas",sharedDismiss:"Abrir Fridgify",sharedInvalid:"Este enlace parece roto o incompleto.",cookMode:"Cocinar",cookStepOf:(a,b)=>`Paso ${a} de ${b}`,cookDone:"Terminado",cookExit:"Salir",cookStartTimer:"Iniciar temporizador",cookTimerRunning:"Temporizador en marcha…",cookNext:"Siguiente",cookPrev:"Atrás",cookFinished:"¡Buen trabajo, a disfrutar! 🎉",shareFridge:"Compartir mi nevera",mergeBanner:"Alguien compartió su nevera contigo mediante Fridgify",mergeAdd:"Añadir sus ingredientes a los míos",mergeDismiss:"No, gracias",mergeAdded:n=>`${n} ingrediente${n>1?'s':''} añadido${n>1?'s':''}`},
+  fr:{title:"Qu'y a-t-il dans ton frigo ?",subtitle:"Ajoute tes ingrédients et Fridgify trouve ce que tu peux cuisiner.",add:"Ajouter",placeholder:"ex. poulet, citron, ail…",empty:"Pas encore d'ingrédients — ajoutes-en ci-dessus",diet:"Régime",prefs:["Végétarien","Végétalien","Sans gluten","Sans lactose","Rapide (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Ajoute des ingrédients pour obtenir des idées",btnReady:n=>`Fridgify avec ${n} ingrédient${n>1?'s':''} ↗`,btnLoading:"Fridgification en cours…",results:n=>`${n} recettes depuis ton frigo`,expand:"Voir les étapes ↓",collapse:"Masquer ↑",save:"Sauvegarder",saved:"Sauvegardé",ingredients:"Ingrédients",steps:"Étapes",tip:"Conseil du chef",error:"Impossible de charger les recettes — réessaie.",loading:"Fouillons le frigo…",recentTitle:"Recettes sauvegardées",recentSubtitle:"Recettes que tu as mises de côté pour plus tard.",recentEmpty:"Aucune recette sauvegardée.\nGénères-en et sauvegarde celles qui te plaisent.",clearAll:"Tout effacer",goGen:"Aller au générateur ↗",surprise:"Surprends-moi",pantryLabel:"Basiques du placard",tabGenerator:"Générateur",tabRecent:"Récents",savedCount:n=>`${n} sauvegardée${n>1?'s':''}`,confirmClear:"Effacer toutes les recettes sauvegardées ?",exportAll:"Tout exporter",import:"Importer",share:"Partager",toastCopied:"Lien copié",toastImported:n=>`${n} recette${n>1?'s':''} importée${n>1?'s':''}`,toastImportError:"Ce fichier n'est pas un fichier Fridgify valide",toastExported:"Recettes exportées",sharedBanner:"Quelqu'un a partagé cette recette avec toi via Fridgify",sharedAdd:"Enregistrer dans mes recettes",sharedDismiss:"Ouvrir Fridgify",sharedInvalid:"Ce lien semble cassé ou incomplet.",cookMode:"Cuisiner",cookStepOf:(a,b)=>`Étape ${a} sur ${b}`,cookDone:"Terminé",cookExit:"Quitter",cookStartTimer:"Démarrer le minuteur",cookTimerRunning:"Minuteur en cours…",cookNext:"Suivant",cookPrev:"Retour",cookFinished:"Bravo — bon appétit ! 🎉",shareFridge:"Partager mon frigo",mergeBanner:"Quelqu'un a partagé son frigo avec toi via Fridgify",mergeAdd:"Ajouter ses ingrédients aux miens",mergeDismiss:"Non merci",mergeAdded:n=>`${n} ingrédient${n>1?'s':''} ajouté${n>1?'s':''}`},
+  de:{title:"Was steckt in deinem Kühlschrank?",subtitle:"Zutaten eingeben und Fridgify findet, was du kochen kannst.",add:"Hinzufügen",placeholder:"z.B. Hähnchen, Zitrone, Knoblauch…",empty:"Noch keine Zutaten — füge oben welche hinzu",diet:"Ernährung",prefs:["Vegetarisch","Vegan","Glutenfrei","Laktosefrei","Schnell (<30 Min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Zutaten hinzufügen für Ideen",btnReady:n=>`Fridgify mit ${n} Zutat${n>1?'en':''} ↗`,btnLoading:"Fridgify sucht…",results:n=>`${n} Rezepte aus deinem Kühlschrank`,expand:"Schritte anzeigen ↓",collapse:"Ausblenden ↑",save:"Speichern",saved:"Gespeichert",ingredients:"Zutaten",steps:"Schritte",tip:"Tipp vom Koch",error:"Rezepte konnten nicht geladen werden — bitte erneut versuchen.",loading:"Kühlschrank wird durchsucht…",recentTitle:"Gespeicherte Rezepte",recentSubtitle:"Rezepte, die du für später gespeichert hast.",recentEmpty:"Noch keine gespeicherten Rezepte.\nGeneriere welche und speichere deine Favoriten.",clearAll:"Alle löschen",goGen:"Zum Generator ↗",surprise:"Überrasch mich",pantryLabel:"Grundzutaten",tabGenerator:"Generator",tabRecent:"Zuletzt",savedCount:n=>`${n} gespeichert`,confirmClear:"Alle gespeicherten Rezepte löschen?",exportAll:"Alle exportieren",import:"Importieren",share:"Teilen",toastCopied:"Link kopiert",toastImported:n=>`${n} Rezept${n>1?'e':''} importiert`,toastImportError:"Diese Datei ist keine gültige Fridgify-Datei",toastExported:"Rezepte exportiert",sharedBanner:"Jemand hat dieses Rezept über Fridgify mit dir geteilt",sharedAdd:"In meinen Rezepten speichern",sharedDismiss:"Fridgify öffnen",sharedInvalid:"Dieser Link scheint defekt oder unvollständig zu sein.",cookMode:"Kochen",cookStepOf:(a,b)=>`Schritt ${a} von ${b}`,cookDone:"Fertig",cookExit:"Verlassen",cookStartTimer:"Timer starten",cookTimerRunning:"Timer läuft…",cookNext:"Weiter",cookPrev:"Zurück",cookFinished:"Gut gemacht — guten Appetit! 🎉",shareFridge:"Meinen Kühlschrank teilen",mergeBanner:"Jemand hat seinen Kühlschrank über Fridgify mit dir geteilt",mergeAdd:"Ihre Zutaten zu meinen hinzufügen",mergeDismiss:"Nein danke",mergeAdded:n=>`${n} Zutat${n>1?'en':''} hinzugefügt`},
+  it:{title:"Cosa c'è nel tuo frigo?",subtitle:"Aggiungi gli ingredienti e Fridgify trova cosa puoi cucinare.",add:"Aggiungi",placeholder:"es. pollo, limone, aglio…",empty:"Nessun ingrediente ancora — aggiungine sopra",diet:"Dieta",prefs:["Vegetariano","Vegano","Senza glutine","Senza lattosio","Veloce (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Aggiungi ingredienti per avere idee",btnReady:n=>`Fridgify con ${n} ingredient${n>1?'i':'e'} ↗`,btnLoading:"Fridgify in azione…",results:n=>`${n} ricette dal tuo frigo`,expand:"Mostra i passi ↓",collapse:"Nascondi ↑",save:"Salva",saved:"Salvato",ingredients:"Ingredienti",steps:"Passaggi",tip:"Consiglio dello chef",error:"Impossibile caricare le ricette — riprova.",loading:"Rovistando nel frigo…",recentTitle:"Ricette salvate",recentSubtitle:"Ricette che hai messo da parte per dopo.",recentEmpty:"Nessuna ricetta salvata.\nGenerane alcune e salva quelle che ti piacciono.",clearAll:"Cancella tutto",goGen:"Vai al generatore ↗",surprise:"Sorprendimi",pantryLabel:"Base di dispensa",tabGenerator:"Generatore",tabRecent:"Recenti",savedCount:n=>`${n} salvata${n>1?'e':''}`,confirmClear:"Cancellare tutte le ricette salvate?",exportAll:"Esporta tutto",import:"Importa",share:"Condividi",toastCopied:"Link copiato",toastImported:n=>`${n} ricett${n>1?'e':'a'} importat${n>1?'e':'a'}`,toastImportError:"Questo file non è un file Fridgify valido",toastExported:"Ricette esportate",sharedBanner:"Qualcuno ha condiviso questa ricetta con te tramite Fridgify",sharedAdd:"Salva nelle mie ricette",sharedDismiss:"Apri Fridgify",sharedInvalid:"Questo link sembra rotto o incompleto.",cookMode:"Cucina",cookStepOf:(a,b)=>`Passo ${a} di ${b}`,cookDone:"Fatto",cookExit:"Esci",cookStartTimer:"Avvia timer",cookTimerRunning:"Timer in corso…",cookNext:"Avanti",cookPrev:"Indietro",cookFinished:"Ottimo lavoro — buon appetito! 🎉",shareFridge:"Condividi il mio frigo",mergeBanner:"Qualcuno ha condiviso il suo frigo con te tramite Fridgify",mergeAdd:"Aggiungi i suoi ingredienti ai miei",mergeDismiss:"No grazie",mergeAdded:n=>`Aggiunti ${n} ingredient${n>1?'i':'e'}`},
+  zh:{title:"冰箱里有什么？",subtitle:"添加你的食材，Fridgify 帮你找到能做的菜。",add:"添加",placeholder:"例如：鸡肉、柠檬、大蒜…",empty:"还没有食材 — 在上方添加",diet:"饮食",prefs:["素食","纯素","无麸质","无乳糖","快速（30分钟内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"添加食材以获取菜谱",btnReady:n=>`用 ${n} 种食材 Fridgify ↗`,btnLoading:"Fridgify 搜索中…",results:n=>`来自冰箱的 ${n} 道菜`,expand:"查看步骤 ↓",collapse:"收起 ↑",save:"保存",saved:"已保存",ingredients:"食材",steps:"步骤",tip:"厨师建议",error:"加载失败，请重试。",loading:"正在翻冰箱…",recentTitle:"已保存的菜谱",recentSubtitle:"你收藏的菜谱。",recentEmpty:"还没有保存的菜谱。\n生成一些，并保存你喜欢的。",clearAll:"清除全部",goGen:"前往生成器 ↗",surprise:"给我惊喜",pantryLabel:"常备调料",tabGenerator:"生成器",tabRecent:"最近",savedCount:n=>`已保存 ${n} 个`,confirmClear:"清除所有已保存的菜谱？",exportAll:"导出全部",import:"导入",share:"分享",toastCopied:"链接已复制",toastImported:n=>`已导入 ${n} 个菜谱`,toastImportError:"该文件不是有效的 Fridgify 文件",toastExported:"菜谱已导出",sharedBanner:"有人通过 Fridgify 与你分享了这个菜谱",sharedAdd:"保存到我的菜谱",sharedDismiss:"打开 Fridgify",sharedInvalid:"此分享链接似乎已损坏或不完整。",cookMode:"烹饪",cookStepOf:(a,b)=>`第 ${a} 步（共 ${b} 步）`,cookDone:"完成",cookExit:"退出",cookStartTimer:"开始计时",cookTimerRunning:"计时中…",cookNext:"下一步",cookPrev:"上一步",cookFinished:"做得好 — 享用美食吧！🎉",shareFridge:"分享我的冰箱",mergeBanner:"有人通过 Fridgify 与你分享了他们的冰箱",mergeAdd:"将他们的食材加入我的食材",mergeDismiss:"不用了",mergeAdded:n=>`已添加 ${n} 种食材`},
+  ja:{title:"冷蔵庫に何がある？",subtitle:"食材を入力して、Fridgify が作れる料理を見つけます。",add:"追加",placeholder:"例：鶏肉、レモン、にんにく…",empty:"まだ食材がありません — 上に追加してください",diet:"食事制限",prefs:["ベジタリアン","ヴィーガン","グルテンフリー","乳製品なし","時短（30分以内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"食材を追加してアイデアを探す",btnReady:n=>`${n}つの食材で Fridgify ↗`,btnLoading:"Fridgify 検索中…",results:n=>`冷蔵庫から ${n} 件のレシピ`,expand:"手順を見る ↓",collapse:"閉じる ↑",save:"保存",saved:"保存済み",ingredients:"材料",steps:"手順",tip:"シェフのヒント",error:"レシピを読み込めませんでした — もう一度お試しください。",loading:"冷蔵庫を漁っています…",recentTitle:"保存済みレシピ",recentSubtitle:"あとで見るために保存したレシピ。",recentEmpty:"保存されたレシピはありません。\n生成して気に入ったものを保存してください。",clearAll:"全て削除",goGen:"ジェネレーターへ ↗",surprise:"おまかせ",pantryLabel:"常備食材",tabGenerator:"ジェネレーター",tabRecent:"最近",savedCount:n=>`${n} 件保存済み`,confirmClear:"保存したレシピをすべて削除しますか？",exportAll:"すべて書き出す",import:"読み込む",share:"共有",toastCopied:"リンクをコピーしました",toastImported:n=>`${n} 件のレシピを読み込みました`,toastImportError:"このファイルは有効な Fridgify ファイルではありません",toastExported:"レシピを書き出しました",sharedBanner:"誰かが Fridgify でこのレシピを共有しました",sharedAdd:"自分のレシピに保存",sharedDismiss:"Fridgify を開く",sharedInvalid:"この共有リンクは壊れているか不完全のようです。",cookMode:"作る",cookStepOf:(a,b)=>`ステップ ${a} / ${b}`,cookDone:"完了",cookExit:"終了",cookStartTimer:"タイマー開始",cookTimerRunning:"タイマー作動中…",cookNext:"次へ",cookPrev:"戻る",cookFinished:"お疲れさまでした — 召し上がれ！🎉",shareFridge:"自分の冷蔵庫を共有",mergeBanner:"誰かが Fridgify で冷蔵庫の中身を共有しました",mergeAdd:"相手の食材を自分のものに追加",mergeDismiss:"いいえ",mergeAdded:n=>`${n} 件の食材を追加しました`},
 };
 
-/* ─── State ──────────────────────────────────────────────────────────── */
-let lang='en', ingredients=[], prefs=[], currentRecipes=[];
-let savedRecipes=JSON.parse(localStorage.getItem('fridgify-saved')||'[]');
-let currentPage='generator';
-// Collab state
-let collabSessionId=null, collabRole=null, collabFriendIngredients=[], collabPollTimer=null;
-// Cook mode state
-let cookRecipe=null, cookStep=0, cookTimerInterval=null, cookTimerSeconds=0, cookTimerRunning=false;
-// PWA
-let deferredInstallPrompt=null;
+/* ── Ingredient database (for autocomplete) ─────────────────────────────── */
+const INGREDIENT_DB = [
+  "chicken breast","chicken thighs","ground beef","ground turkey","bacon","pork chops","sausage","steak","salmon","shrimp","tuna","tofu","eggs",
+  "milk","butter","cheese","cheddar","mozzarella","parmesan","cream cheese","yogurt","sour cream","heavy cream",
+  "rice","pasta","spaghetti","bread","flour","tortillas","noodles","quinoa","oats","breadcrumbs",
+  "onion","garlic","tomato","potato","carrot","bell pepper","broccoli","spinach","lettuce","cucumber","zucchini","mushroom","celery","corn","peas","green beans","cabbage","avocado",
+  "lemon","lime","apple","banana","orange","strawberries","blueberries",
+  "olive oil","vegetable oil","soy sauce","vinegar","honey","sugar","brown sugar","salt","black pepper","paprika","cumin","oregano","basil","thyme","cinnamon","chili powder","ginger",
+  "beans","black beans","chickpeas","lentils","canned tomatoes","tomato paste","coconut milk","broth","stock","mayonnaise","mustard","ketchup","peanut butter","almonds","walnuts"
+];
 
-/* ─── Helpers ───────────────────────────────────────────────────────── */
-function t(k,...a){const l=LANGS[lang]||LANGS.en,v=l[k]!==undefined?l[k]:LANGS.en[k];return typeof v==='function'?v(...a):(v||'')}
-function persist(){localStorage.setItem('fridgify-saved',JSON.stringify(savedRecipes))}
-function formatDate(iso){return new Date(iso).toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}
+/* ── Pantry staples (excluded from "missing ingredient" prompts) ─────────── */
+const PANTRY_STAPLES = [
+  { key: "salt" }, { key: "black pepper" }, { key: "olive oil" }, { key: "butter" },
+  { key: "garlic" }, { key: "onion" }, { key: "flour" }, { key: "sugar" }
+];
 
-/* ─── PWA ────────────────────────────────────────────────────────────── */
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;document.getElementById('install-btn').classList.add('visible')});
-async function installPWA(){if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();const r=await deferredInstallPrompt.userChoice;if(r.outcome==='accepted'){document.getElementById('install-btn').classList.remove('visible')}deferredInstallPrompt=null}
-// Service worker for offline support
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{const sw=`
-self.addEventListener('install',e=>e.waitUntil(caches.open('fridgify-v1').then(c=>c.addAll([location.pathname]))));
-self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))}});
-`;const blob=new Blob([sw],{type:'application/javascript'});const url=URL.createObjectURL(blob);navigator.serviceWorker.register(url).catch(()=>{})})}
+/* ── Surprise pools (randomized ingredient sets to spark ideas) ──────────── */
+const SURPRISE_POOLS = [
+  ["chicken breast","lemon","garlic","spinach"],
+  ["ground beef","onion","bell pepper","rice"],
+  ["shrimp","garlic","lime","cilantro"],
+  ["tofu","soy sauce","ginger","broccoli"],
+  ["eggs","cheese","spinach","mushroom"],
+  ["pasta","tomato","garlic","basil"],
+  ["salmon","lemon","asparagus","dill"],
+  ["chickpeas","tomato","onion","cumin"],
+  ["pork chops","apple","onion","thyme"],
+  ["potato","cheese","bacon","sour cream"]
+];
 
-/* ─── Navigation ─────────────────────────────────────────────────────── */
-function showPage(name){currentPage=name;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');document.getElementById('tab-'+name).classList.add('active');if(name==='recent')renderRecent()}
+/* ── State ────────────────────────────────────────────────────────────── */
+let lang = 'en';
+let ingredients = [];
+let prefs = [];
+let pantryActive = []; // active pantry staple keys
+let savedRecipes = JSON.parse(localStorage.getItem('recipe-app-saved') || '[]');
+let currentRecipes = []; // recipes currently shown
+let currentPage = 'generator';
+let acMatches = []; // current autocomplete matches
+let acHighlight = -1; // highlighted autocomplete index
 
-/* ─── Theme ──────────────────────────────────────────────────────────── */
-function setTheme(theme){document.body.className='theme-'+theme;document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active'));document.querySelector('.dot-'+theme).classList.add('active')}
+/* ── Helpers ──────────────────────────────────────────────────────────── */
+function t(key, ...args) {
+  const l = LANGS[lang] || LANGS.en;
+  const v = l[key] !== undefined ? l[key] : LANGS.en[key];
+  return typeof v === 'function' ? v(...args) : (v || '');
+}
 
-/* ─── Language ───────────────────────────────────────────────────────── */
-function setLang(l){lang=l;renderUI();if(currentPage==='recent')renderRecent()}
-function renderUI(){document.getElementById('ui-title').textContent=t('title');document.getElementById('ui-subtitle').textContent=t('subtitle');document.getElementById('ui-add').textContent=t('add');document.getElementById('ing-input').placeholder=t('placeholder');document.getElementById('ui-diet-label').textContent=t('diet');document.getElementById('ui-recent-title').textContent=t('recentTitle');document.getElementById('ui-recent-subtitle').textContent=t('recentSubtitle');renderChips();renderPrefs();updateBtn();renderCollab()}
-function renderPrefs(){const labels=t('prefs'),keys=t('prefKeys');document.getElementById('prefs-row').innerHTML=labels.map((label,i)=>`<button class="pref-btn${prefs.includes(keys[i])?' active':''}" onclick="togglePref(this,'${keys[i]}')">${label}</button>`).join('')}
+function persist() {
+  localStorage.setItem('recipe-app-saved', JSON.stringify(savedRecipes));
+}
 
-/* ─── Ingredients ────────────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded',()=>{document.getElementById('ing-input').addEventListener('keydown',e=>{if(e.key==='Enter')addIngredient()});checkCollabFromURL();renderUI()});
-function addIngredient(){const input=document.getElementById('ing-input'),val=input.value.trim().toLowerCase();if(!val||ingredients.includes(val)){input.value='';return}ingredients.push(val);input.value='';renderChips();updateBtn();if(collabRole==='host')saveHostIngredients()}
-function removeIngredient(i){ingredients.splice(i,1);renderChips();updateBtn();if(collabRole==='host')saveHostIngredients()}
-function renderChips(){const el=document.getElementById('chips');if(!ingredients.length){el.innerHTML=`<span class="chip-empty">${t('empty')}</span>`;return}let html=ingredients.map((ing,i)=>`<span class="chip">${ing}<button onclick="removeIngredient(${i})" aria-label="Remove ${ing}">×</button></span>`).join('');if(collabFriendIngredients.length){html+=`<span class="chip" style="opacity:0.6;font-style:italic">${t('collabFriendCount',collabFriendIngredients.length)}</span>`}el.innerHTML=html}
-function togglePref(btn,pref){if(prefs.includes(pref)){prefs=prefs.filter(p=>p!==pref);btn.classList.remove('active')}else{prefs.push(pref);btn.classList.add('active')}}
-function updateBtn(){const btn=document.getElementById('gen-btn');if(ingredients.length){btn.disabled=false;btn.textContent=t('btnReady',ingredients.length+(collabFriendIngredients.length||0))}else{btn.disabled=true;btn.textContent=t('btnEmpty')}}
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+}
 
-/* ─── Collab ─────────────────────────────────────────────────────────── */
-// We use localStorage as a simple "shared" store keyed by session ID
-// (Works across tabs on same device. For real multi-device you'd need a backend.)
-function generateSessionId(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
-function collabKey(id){return'fridgify-collab-'+id}
-function saveHostIngredients(){if(!collabSessionId)return;const data=JSON.parse(localStorage.getItem(collabKey(collabSessionId))||'{}');data.host=ingredients;data.ts=Date.now();localStorage.setItem(collabKey(collabSessionId),JSON.stringify(data))}
-function saveGuestIngredients(){if(!collabSessionId)return;const data=JSON.parse(localStorage.getItem(collabKey(collabSessionId))||'{}');data.guest=ingredients;data.ts=Date.now();localStorage.setItem(collabKey(collabSessionId),JSON.stringify(data))}
-function startCollabHost(){collabSessionId=generateSessionId();collabRole='host';saveHostIngredients();renderCollab();startHostPolling()}
-function startHostPolling(){collabPollTimer=setInterval(()=>{const data=JSON.parse(localStorage.getItem(collabKey(collabSessionId))||'{}');if(data.guest&&data.guest.length>0&&JSON.stringify(data.guest)!==JSON.stringify(collabFriendIngredients)){collabFriendIngredients=data.guest;renderCollab();renderChips();updateBtn()}},1500)}
-function checkCollabFromURL(){const params=new URLSearchParams(location.search);const sid=params.get('collab');if(sid){collabSessionId=sid;collabRole='guest';// Load host's existing ingredients as reference
-const data=JSON.parse(localStorage.getItem(collabKey(sid))||'{}');collabFriendIngredients=data.host||[];renderCollab();renderChips();updateBtn()}}
-function renderCollab(){const el=document.getElementById('collab-section');if(!collabSessionId&&!collabRole){el.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><button class="pref-btn" onclick="startCollabHost()" style="display:flex;align-items:center;gap:6px"><i class="ti ti-users" style="font-size:14px" aria-hidden="true"></i>${t('collabShare')}</button><span style="font-size:12px;color:var(--text-muted)">${t('collabDesc')}</span></div>`;return}
-if(collabRole==='host'){const url=`${location.origin}${location.pathname}?collab=${collabSessionId}`;const hasFriend=collabFriendIngredients.length>0;el.innerHTML=`<div class="collab-banner${hasFriend?' collab-merged':''}"><strong>${t('collabTitle')}</strong><span class="collab-link">${url}</span><div class="collab-btn-row"><button class="collab-btn" onclick="copyCollabLink('${url}')" id="collab-copy-btn">${t('collabCopy')}</button><button class="collab-btn secondary" onclick="endCollab()">&times; End</button></div><div class="collab-info">${hasFriend?t('collabFriendAdded'):t('collabWaiting')}</div></div>`;return}
-if(collabRole==='guest'){el.innerHTML=`<div class="collab-banner collab-merged"><strong>${t('collabTitle')}</strong><div class="collab-info">${t('collabFriendAdded')}</div><div class="collab-btn-row"><button class="collab-btn" onclick="submitGuestIngredients()">${t('collabGenerate')}</button></div></div>`;return}}
-function copyCollabLink(url){navigator.clipboard.writeText(url).then(()=>{const btn=document.getElementById('collab-copy-btn');if(btn){btn.textContent=t('collabCopied');setTimeout(()=>{if(btn)btn.textContent=t('collabCopy')},2000)}}).catch(()=>{})}
-function submitGuestIngredients(){saveGuestIngredients();generate()}
-function endCollab(){clearInterval(collabPollTimer);collabSessionId=null;collabRole=null;collabFriendIngredients=[];history.replaceState({},'',location.pathname);renderCollab();renderChips();updateBtn()}
+/* ── Navigation ───────────────────────────────────────────────────────── */
+function showPage(name) {
+  currentPage = name;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'recent') renderRecent();
+}
 
-/* ─── Generate ───────────────────────────────────────────────────────── */
-async function generate(){const btn=document.getElementById('gen-btn'),results=document.getElementById('results');btn.disabled=true;btn.textContent=t('btnLoading');currentRecipes=[];results.innerHTML=`<div class="loading-state"><div class="spinner"></div><p>${t('loading')}</p></div>`;
-const allIngredients=[...new Set([...ingredients,...collabFriendIngredients])];
-const prefStr=prefs.length?`Dietary preferences: ${prefs.join(', ')}.`:'';
-const langNames={en:'English',bg:'Bulgarian',es:'Spanish',fr:'French',de:'German',it:'Italian',zh:'Chinese (Simplified)',ja:'Japanese'};
-const prompt=`You are a creative chef assistant. Suggest 4 recipes. Respond entirely in ${langNames[lang]||'English'}.
-Ingredients: ${allIngredients.join(', ')}.
+/* ── Theme ────────────────────────────────────────────────────────────── */
+function setTheme(theme) {
+  document.body.className = 'theme-' + theme;
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+  document.querySelector('.dot-' + theme).classList.add('active');
+}
+
+/* ── Language ─────────────────────────────────────────────────────────── */
+function setLang(l) {
+  lang = l;
+  renderUI();
+  if (currentPage === 'recent') renderRecent();
+  if (document.getElementById('shared-overlay').classList.contains('open')) checkForSharedRecipe();
+}
+
+function renderUI() {
+  document.getElementById('tab-generator').textContent = t('tabGenerator');
+  document.getElementById('tab-recent').textContent = t('tabRecent');
+  document.getElementById('ui-title').textContent = t('title');
+  document.getElementById('ui-subtitle').textContent = t('subtitle');
+  document.getElementById('ui-add').textContent = t('add');
+  document.getElementById('ing-input').placeholder = t('placeholder');
+  document.getElementById('ui-diet-label').textContent = t('diet');
+  document.getElementById('ui-surprise').textContent = t('surprise');
+  document.getElementById('ui-share-fridge').textContent = t('shareFridge');
+  document.getElementById('ui-recent-title').textContent = t('recentTitle');
+  document.getElementById('ui-recent-subtitle').textContent = t('recentSubtitle');
+  document.getElementById('ui-export-all').textContent = t('exportAll');
+  document.getElementById('ui-import').textContent = t('import');
+  renderChips();
+  renderPrefs();
+  renderPantryRow();
+  updateBtn();
+  if (currentRecipes.length) renderRecipes(currentRecipes, false); // re-render labels
+}
+
+function renderPrefs() {
+  const labels = t('prefs');
+  const keys = t('prefKeys');
+  document.getElementById('prefs-row').innerHTML = labels.map((label, i) =>
+    `<button class="pref-btn${prefs.includes(keys[i]) ? ' active' : ''}" onclick="togglePref(this,'${keys[i]}')">${label}</button>`
+  ).join('');
+}
+
+function renderPantryRow() {
+  const row = document.getElementById('pantry-row');
+  row.innerHTML = PANTRY_STAPLES.map(s => {
+    const active = pantryActive.includes(s.key);
+    return `<button class="pantry-chip${active ? ' active' : ''}" onclick="togglePantry('${s.key}')">
+      <i class="ti ${active ? 'ti-check' : 'ti-plus'}" aria-hidden="true"></i>${s.key}
+    </button>`;
+  }).join('');
+}
+
+function togglePantry(key) {
+  const idx = pantryActive.indexOf(key);
+  if (idx > -1) {
+    pantryActive.splice(idx, 1);
+    ingredients = ingredients.filter(i => i !== key);
+  } else {
+    pantryActive.push(key);
+    if (!ingredients.includes(key)) ingredients.push(key);
+  }
+  renderPantryRow();
+  renderChips();
+  updateBtn();
+}
+
+/* ── Ingredients ──────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('ing-input');
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (acHighlight > -1 && acMatches[acHighlight]) {
+        selectAutocomplete(acMatches[acHighlight]);
+      } else {
+        addIngredient();
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (acMatches.length) { acHighlight = (acHighlight + 1) % acMatches.length; renderAutocomplete(); }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (acMatches.length) { acHighlight = (acHighlight - 1 + acMatches.length) % acMatches.length; renderAutocomplete(); }
+    } else if (e.key === 'Escape') {
+      closeAutocomplete();
+    }
+  });
+  input.addEventListener('input', () => updateAutocomplete(input.value));
+  input.addEventListener('blur', () => setTimeout(closeAutocomplete, 120));
+  renderUI();
+});
+
+function addIngredient() {
+  const input = document.getElementById('ing-input');
+  const val = input.value.trim().toLowerCase();
+  closeAutocomplete();
+  if (!val || ingredients.includes(val)) { input.value = ''; return; }
+  ingredients.push(val);
+  input.value = '';
+  renderChips();
+  updateBtn();
+}
+
+function removeIngredient(i) {
+  const removed = ingredients[i];
+  ingredients.splice(i, 1);
+  // keep pantry toggle row in sync if a staple chip was removed directly
+  const staleIdx = pantryActive.indexOf(removed);
+  if (staleIdx > -1) { pantryActive.splice(staleIdx, 1); renderPantryRow(); }
+  renderChips();
+  updateBtn();
+}
+
+function renderChips() {
+  const el = document.getElementById('chips');
+  if (!ingredients.length) {
+    el.innerHTML = `<span class="chip-empty">${t('empty')}</span>`;
+    return;
+  }
+  el.innerHTML = ingredients.map((ing, i) =>
+    `<span class="chip">${ing}<button onclick="removeIngredient(${i})" aria-label="Remove ${ing}">×</button></span>`
+  ).join('');
+}
+
+/* ── Autocomplete ─────────────────────────────────────────────────────── */
+function updateAutocomplete(query) {
+  const q = query.trim().toLowerCase();
+  acHighlight = -1;
+  if (!q) { closeAutocomplete(); return; }
+  acMatches = INGREDIENT_DB
+    .filter(item => item.includes(q) && !ingredients.includes(item))
+    .sort((a, b) => a.indexOf(q) - b.indexOf(q))
+    .slice(0, 6);
+  renderAutocomplete();
+}
+
+function renderAutocomplete() {
+  const list = document.getElementById('autocomplete-list');
+  if (!acMatches.length) { list.classList.remove('open'); list.innerHTML = ''; return; }
+  list.innerHTML = acMatches.map((item, i) =>
+    `<div class="autocomplete-item${i === acHighlight ? ' highlighted' : ''}" onmousedown="selectAutocomplete('${item.replace(/'/g, "\\'")}')">
+      <i class="ti ti-search" aria-hidden="true"></i>${item}
+    </div>`
+  ).join('');
+  list.classList.add('open');
+}
+
+function selectAutocomplete(item) {
+  if (!ingredients.includes(item)) ingredients.push(item);
+  document.getElementById('ing-input').value = '';
+  closeAutocomplete();
+  renderChips();
+  updateBtn();
+  document.getElementById('ing-input').focus();
+}
+
+function closeAutocomplete() {
+  acMatches = []; acHighlight = -1;
+  const list = document.getElementById('autocomplete-list');
+  list.classList.remove('open');
+  list.innerHTML = '';
+}
+
+function togglePref(btn, pref) {
+  if (prefs.includes(pref)) { prefs = prefs.filter(p => p !== pref); btn.classList.remove('active'); }
+  else { prefs.push(pref); btn.classList.add('active'); }
+}
+
+function updateBtn() {
+  const btn = document.getElementById('gen-btn');
+  if (ingredients.length) { btn.disabled = false; btn.textContent = t('btnReady', ingredients.length); }
+  else { btn.disabled = true; btn.textContent = t('btnEmpty'); }
+  const shareFridgeBtn = document.getElementById('share-fridge-btn');
+  if (shareFridgeBtn) shareFridgeBtn.disabled = !ingredients.length;
+}
+
+/* ── Surprise me ──────────────────────────────────────────────────────── */
+function surpriseMe() {
+  const pool = SURPRISE_POOLS[Math.floor(Math.random() * SURPRISE_POOLS.length)];
+  pool.forEach(item => { if (!ingredients.includes(item)) ingredients.push(item); });
+  renderChips();
+  updateBtn();
+  generate();
+}
+
+/* ── Generate ─────────────────────────────────────────────────────────── */
+async function generate() {
+  const btn = document.getElementById('gen-btn');
+  const results = document.getElementById('results');
+  btn.disabled = true; btn.textContent = t('btnLoading');
+  currentRecipes = [];
+  results.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>${t('loading')}</p></div>`;
+
+  const prefStr = prefs.length ? `Dietary preferences: ${prefs.join(', ')}.` : '';
+  const pantryStr = pantryActive.length ? `The user always has these pantry basics on hand, so don't flag them as missing: ${pantryActive.join(', ')}.` : '';
+  const langNames = { en:'English', bg:'Bulgarian', es:'Spanish', fr:'French', de:'German', it:'Italian', zh:'Chinese (Simplified)', ja:'Japanese' };
+
+  const prompt = `You are a creative chef assistant. Given a list of ingredients, suggest 4 recipe ideas. Respond entirely in ${langNames[lang] || 'English'}.
+
+Ingredients: ${ingredients.join(', ')}.
 ${prefStr}
+${pantryStr}
+
 Respond ONLY with a JSON array (no markdown, no extra text):
 [{"name":"...","time":"...","difficulty":"...","servings":"...","description":"...","ingredients":["..."],"steps":["..."],"tip":"..."}]
-Vary cuisines. Note missing key ingredients as "also need: X" in the list.`;
-try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})});const data=await res.json();const text=data.content.map(b=>b.text||'').join('');const clean=text.replace(/```json|```/g,'').trim();const recipes=JSON.parse(clean);currentRecipes=recipes;renderRecipes(recipes)}catch(e){results.innerHTML=`<div class="error-msg">${t('error')}</div>`}
-btn.disabled=false;btn.textContent=t('btnReady',allIngredients.length)}
+Vary cuisines. For missing key ingredients (excluding pantry basics noted above), prefix with "also need:" in the ingredients list.`;
 
-/* ─── Recipe cards ───────────────────────────────────────────────────── */
-function isSaved(name){return savedRecipes.some(r=>r.name===name)}
-function toggleSave(name,idx,fromRecent){if(isSaved(name)){savedRecipes=savedRecipes.filter(r=>r.name!==name)}else{const recipe=fromRecent?savedRecipes[idx]:currentRecipes[idx];if(recipe)savedRecipes.unshift({...recipe,savedAt:new Date().toISOString()})}persist();const saveId=(fromRecent?'rsave-':'gsave-')+idx;const btn=document.getElementById(saveId);if(btn){const sv=isSaved(name);btn.className='save-btn'+(sv?' saved':'');btn.innerHTML=`<i class="ti ${sv?'ti-bookmark-filled':'ti-bookmark'}" aria-hidden="true"></i> ${sv?t('saved'):t('save')}`}if(fromRecent)renderRecent()}
-function toggleDetail(pfx,id){const el=document.getElementById(pfx+'detail-'+id),btn=document.getElementById(pfx+'expand-'+id);if(el.classList.contains('open')){el.classList.remove('open');btn.textContent=t('expand')}else{el.classList.add('open');btn.textContent=t('collapse')}}
-function recipeCardHTML(r,idx,pfx,fromRecent){const sv=isSaved(r.name);const sid=(fromRecent?'rsave-':'gsave-')+idx;const nameEsc=r.name.replace(/'/g,"\\'");return`<div class="recipe-card"><div class="recipe-name">${r.name}</div><div class="recipe-meta"><span class="meta-pill"><i class="ti ti-clock" style="font-size:12px" aria-hidden="true"></i> ${r.time}</span><span class="meta-pill">${r.difficulty}</span><span class="meta-pill"><i class="ti ti-users" style="font-size:12px" aria-hidden="true"></i> ${r.servings}</span></div><p class="recipe-desc">${r.description}</p><div class="card-actions"><button class="expand-btn" id="${pfx}expand-${idx}" onclick="toggleDetail('${pfx}',${idx})">${t('expand')}</button><button class="save-btn${sv?' saved':''}" id="${sid}" onclick="toggleSave('${nameEsc}',${idx},${fromRecent})"><i class="ti ${sv?'ti-bookmark-filled':'ti-bookmark'}" aria-hidden="true"></i> ${sv?t('saved'):t('save')}</button><button class="cook-btn" onclick="openCookMode(${fromRecent?idx:(currentRecipes.indexOf(r))},${fromRecent})"><i class="ti ti-chef-hat" style="font-size:12px" aria-hidden="true"></i> ${t('cook')}</button></div><div class="recipe-detail" id="${pfx}detail-${idx}"><div class="detail-section"><div class="detail-title">${t('ingredients')}</div><ul class="detail-list">${r.ingredients.map(ing=>`<li>${ing}</li>`).join('')}</ul></div><div class="detail-section"><div class="detail-title">${t('steps')}</div><ul class="detail-list">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ul></div>${r.tip?`<div class="detail-section"><div class="detail-title">${t('tip')}</div><p class="chef-tip">${r.tip}</p></div>`:''}</div></div>`}
-function renderRecipes(recipes){const results=document.getElementById('results');results.innerHTML=`<p class="results-header">${t('results',recipes.length)}</p>`+recipes.map((r,i)=>recipeCardHTML(r,i,'g',false)).join('')}
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    const text = data.choices[0].message.content;
+    const clean = text.replace(/```json|```/g, '').trim();
+    const recipes = JSON.parse(clean);
+    currentRecipes = recipes;
+    renderRecipes(recipes, true);
+  } catch(e) {
+    results.innerHTML = `<div class="error-msg">${t('error')}</div>`;
+  }
+  btn.disabled = false; btn.textContent = t('btnReady', ingredients.length);
+}
 
-/* ─── Cook mode ──────────────────────────────────────────────────────── */
-function openCookMode(idx,fromRecent){const recipe=fromRecent?savedRecipes[idx]:currentRecipes[idx];if(!recipe||!recipe.steps||!recipe.steps.length)return;cookRecipe=recipe;cookStep=0;stopCookTimer();document.getElementById('cook-recipe-name').textContent=recipe.name;document.getElementById('cook-overlay').classList.add('open');document.body.style.overflow='hidden';renderCookStep()}
-function closeCookMode(){document.getElementById('cook-overlay').classList.remove('open');document.body.style.overflow='';stopCookTimer();cookRecipe=null}
-function renderCookStep(){if(!cookRecipe)return;const steps=cookRecipe.steps,n=steps.length,isDone=cookStep>=n;
-// Progress pips
-const pips=document.getElementById('cook-progress');pips.innerHTML=Array.from({length:n},(_,i)=>`<div class="cook-pip${i<cookStep?' done':i===cookStep?' current':''}"></div>`).join('');
-// Navigation
-const prevBtn=document.getElementById('cook-prev-btn'),nextBtn=document.getElementById('cook-next-btn');prevBtn.textContent=t('prevStep');prevBtn.disabled=cookStep===0;if(isDone){nextBtn.textContent=t('finishCook')}else{nextBtn.textContent=cookStep===n-1?t('finishCook'):t('nextStep')}
-// Content
-const content=document.getElementById('cook-step-content');document.getElementById('cook-header-label').textContent=isDone?t('cookDone'):t('cookStep',cookStep+1,n);
-if(isDone){content.innerHTML=`<div class="cook-done-screen"><div class="cook-done-icon">🍽️</div><h2>${t('cookDone')}</h2><p>${t('cookDoneMsg')}</p></div>`;stopCookTimer();return}
-// Detect if step has a time hint (e.g. "5 minutes", "10 min")
-const step=steps[cookStep];const timeMatch=step.match(/(\d+)\s*(?:minutes?|mins?|стъпки|минут)/i);const seconds=timeMatch?parseInt(timeMatch[1])*60:0;
-content.innerHTML=`<div class="cook-step-num">${t('cookStep',cookStep+1,n)}</div><div class="cook-step-text">${step}</div>${seconds?renderTimerHTML(seconds):''}`;
-if(seconds&&cookTimerSeconds===0){cookTimerSeconds=seconds}}
-function renderTimerHTML(defaultSec){const m=Math.floor(cookTimerSeconds/60),s=cookTimerSeconds%60;const display=cookTimerSeconds>0?`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${String(Math.floor(defaultSec/60)).padStart(2,'0')}:${String(defaultSec%60).padStart(2,'0')}`;return`<div class="cook-timer-row"><span class="cook-timer" id="cook-timer-display">${display}</span><button class="cook-timer-btn" id="cook-timer-btn" onclick="toggleCookTimer(${defaultSec})">${cookTimerRunning?'⏸ Pause':'▶ Start'}</button><button class="cook-timer-btn" onclick="resetCookTimer(${defaultSec})">↺ Reset</button></div>`}
-function cookNav(dir){if(!cookRecipe)return;const n=cookRecipe.steps.length;if(dir>0&&cookStep>=n){closeCookMode();return}cookStep=Math.max(0,Math.min(cookStep+dir,n));stopCookTimer();cookTimerSeconds=0;renderCookStep()}
-function toggleCookTimer(defaultSec){if(cookTimerRunning){stopCookTimer()}else{if(cookTimerSeconds<=0)cookTimerSeconds=defaultSec;cookTimerRunning=true;document.getElementById('cook-timer-btn').textContent='⏸ Pause';cookTimerInterval=setInterval(()=>{cookTimerSeconds--;updateTimerDisplay();if(cookTimerSeconds<=0){stopCookTimer();document.getElementById('cook-timer-display').textContent='00:00';document.getElementById('cook-timer-display').style.color='var(--text-accent)'}},1000)}}
-function stopCookTimer(){clearInterval(cookTimerInterval);cookTimerInterval=null;cookTimerRunning=false;const btn=document.getElementById('cook-timer-btn');if(btn)btn.textContent='▶ Start'}
-function resetCookTimer(defaultSec){stopCookTimer();cookTimerSeconds=defaultSec;updateTimerDisplay()}
-function updateTimerDisplay(){const el=document.getElementById('cook-timer-display');if(el){const m=Math.floor(cookTimerSeconds/60),s=cookTimerSeconds%60;el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}}
+/* ── Recipe card rendering ────────────────────────────────────────────── */
+function isSaved(name) {
+  return savedRecipes.some(r => r.name === name);
+}
 
-/* ─── Recent page ────────────────────────────────────────────────────── */
-function clearAll(){if(!confirm('Clear all saved recipes?'))return;savedRecipes=[];persist();renderRecent()}
-function renderRecent(){const el=document.getElementById('recent-content');if(!savedRecipes.length){el.innerHTML=`<div class="recent-empty"><i class="ti ti-bookmark" aria-hidden="true"></i>${t('recentEmpty').replace('\n','<br>')}<br><br><button class="pref-btn" style="margin-top:4px" onclick="showPage('generator')">${t('goGen')}</button></div>`;return}
-const groups={};savedRecipes.forEach(r=>{const d=formatDate(r.savedAt||new Date().toISOString());if(!groups[d])groups[d]=[];groups[d].push(r)});
-let html=`<div class="recent-header-row"><span class="results-header">${savedRecipes.length} saved</span><button class="clear-btn" onclick="clearAll()">${t('clearAll')}</button></div>`;
-Object.entries(groups).forEach(([date,recipes])=>{html+=`<div class="recent-date">${date}</div>`;html+=recipes.map(r=>{const gi=savedRecipes.indexOf(r);return recipeCardHTML(r,gi,'r',true)}).join('')});
-el.innerHTML=html}
+function toggleSave(name, idx, fromRecent) {
+  const wasSaved = isSaved(name);
+  if (wasSaved) {
+    savedRecipes = savedRecipes.filter(r => r.name !== name);
+  } else {
+    const recipe = fromRecent
+      ? savedRecipes.find(r => r.name === name) // already there, won't happen
+      : currentRecipes[idx];
+    if (recipe) savedRecipes.unshift({ ...recipe, savedAt: new Date().toISOString() });
+  }
+  persist();
+  // Update button appearance without full re-render
+  const btn = document.getElementById((fromRecent ? 'rsave-' : 'gsave-') + idx);
+  if (btn) {
+    const saved = isSaved(name);
+    btn.className = 'save-btn' + (saved ? ' saved' : '');
+    btn.innerHTML = `<i class="ti ${saved ? 'ti-bookmark-filled' : 'ti-bookmark'}" aria-hidden="true"></i> ${saved ? t('saved') : t('save')}`;
+    if (!wasSaved && saved) fireConfetti(btn);
+  }
+  if (fromRecent) renderRecent();
+}
+
+/* ── Confetti ─────────────────────────────────────────────────────────── */
+function fireConfetti(originEl) {
+  const colors = ['#1a5cc8', '#e76f51', '#4a9e4a', '#f4a261', '#7e57c2', '#4fc3f7'];
+  const rect = originEl ? originEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0 };
+  const originX = rect.left + rect.width / 2;
+  const originY = rect.top;
+
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  document.body.appendChild(layer);
+
+  const count = 22;
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const color = colors[i % colors.length];
+    const drift = (Math.random() - 0.5) * 220;
+    const spin = (Math.random() - 0.5) * 720;
+    const duration = 1100 + Math.random() * 700;
+    const delay = Math.random() * 120;
+    const size = 6 + Math.random() * 5;
+    piece.style.left = `${originX + (Math.random() - 0.5) * 30}px`;
+    piece.style.top = `${originY}px`;
+    piece.style.width = `${size}px`;
+    piece.style.height = `${size * (0.5 + Math.random() * 0.6)}px`;
+    piece.style.background = color;
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.setProperty('--drift', `${drift}px`);
+    piece.style.setProperty('--spin', `${spin}deg`);
+    piece.style.animationDuration = `${duration}ms`;
+    piece.style.animationDelay = `${delay}ms`;
+    layer.appendChild(piece);
+  }
+
+  setTimeout(() => layer.remove(), 2200);
+}
+
+function toggleDetail(prefix, id) {
+  const el = document.getElementById(prefix + 'detail-' + id);
+  const btn = document.getElementById(prefix + 'expand-' + id);
+  if (el.classList.contains('open')) {
+    el.classList.remove('open'); btn.textContent = t('expand');
+  } else {
+    el.classList.add('open'); btn.textContent = t('collapse');
+  }
+}
+
+function recipeCardHTML(r, idx, prefix, fromRecent) {
+  const saved = isSaved(r.name);
+  const saveId = (fromRecent ? 'rsave-' : 'gsave-') + idx;
+  const isSharedView = prefix === 's';
+  return `
+  <div class="recipe-card">
+    <div class="recipe-name">${r.name}</div>
+    <div class="recipe-meta">
+      <span class="meta-pill"><i class="ti ti-clock" style="font-size:12px" aria-hidden="true"></i> ${r.time}</span>
+      <span class="meta-pill">${r.difficulty}</span>
+      <span class="meta-pill"><i class="ti ti-users" style="font-size:12px" aria-hidden="true"></i> ${r.servings}</span>
+    </div>
+    <p class="recipe-desc">${r.description}</p>
+    <div class="card-actions">
+      <button class="expand-btn" id="${prefix}expand-${idx}" onclick="toggleDetail('${prefix}',${idx})">${t('expand')}</button>
+      ${!isSharedView ? `
+      <button class="save-btn${saved ? ' saved' : ''}" id="${saveId}" onclick="toggleSave('${r.name.replace(/'/g,"\\'")}',${idx},${fromRecent})">
+        <i class="ti ${saved ? 'ti-bookmark-filled' : 'ti-bookmark'}" aria-hidden="true"></i>
+        ${saved ? t('saved') : t('save')}
+      </button>
+      <button class="icon-btn" onclick="shareRecipe(${idx},${fromRecent})" aria-label="${t('share')}">
+        <i class="ti ti-share-2" aria-hidden="true"></i>
+      </button>
+      <button class="icon-btn" onclick="exportSingle(${idx},${fromRecent})" aria-label="${t('exportAll')}">
+        <i class="ti ti-download" aria-hidden="true"></i>
+      </button>
+      <button class="icon-btn" onclick="startCookMode(${idx},${fromRecent})" aria-label="${t('cookMode')}">
+        <i class="ti ti-tools-kitchen-2" aria-hidden="true"></i> ${t('cookMode')}
+      </button>` : ''}
+    </div>
+    <div class="recipe-detail" id="${prefix}detail-${idx}">
+      <div class="detail-section">
+        <div class="detail-title">${t('ingredients')}</div>
+        <ul class="detail-list">${r.ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
+      </div>
+      <div class="detail-section">
+        <div class="detail-title">${t('steps')}</div>
+        <ul class="detail-list">${r.steps.map(s => `<li>${s}</li>`).join('')}</ul>
+      </div>
+      ${r.tip ? `<div class="detail-section"><div class="detail-title">${t('tip')}</div><p class="chef-tip">${r.tip}</p></div>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderRecipes(recipes, newSearch) {
+  const results = document.getElementById('results');
+  results.innerHTML = `<p class="results-header">${t('results', recipes.length)}</p>` +
+    recipes.map((r, i) => recipeCardHTML(r, i, 'g', false)).join('');
+}
+
+/* ── Recent page ──────────────────────────────────────────────────────── */
+function clearAll() {
+  if (!confirm(t('confirmClear'))) return;
+  savedRecipes = [];
+  persist();
+  renderRecent();
+}
+
+function renderRecent() {
+  const el = document.getElementById('recent-content');
+  if (!savedRecipes.length) {
+    el.innerHTML = `
+      <div class="recent-empty">
+        <i class="ti ti-bookmark" aria-hidden="true"></i>
+        ${t('recentEmpty').replace('\n','<br>')}
+        <br><br>
+        <button class="pref-btn" style="margin-top:4px" onclick="showPage('generator')">${t('goGen')}</button>
+      </div>`;
+    return;
+  }
+
+  // Group by date
+  const groups = {};
+  savedRecipes.forEach(r => {
+    const d = formatDate(r.savedAt || new Date().toISOString());
+    if (!groups[d]) groups[d] = [];
+    groups[d].push(r);
+  });
+
+  let html = `<div class="recent-header-row">
+    <span class="results-header">${t('savedCount', savedRecipes.length)}</span>
+    <button class="clear-btn" onclick="clearAll()">${t('clearAll')}</button>
+  </div>`;
+
+  Object.entries(groups).forEach(([date, recipes]) => {
+    html += `<div class="recent-date">${date}</div>`;
+    html += recipes.map((r, i) => {
+      const globalIdx = savedRecipes.indexOf(r);
+      return recipeCardHTML(r, globalIdx, 'r', true);
+    }).join('');
+  });
+
+  el.innerHTML = html;
+}
+
+/* ── Toast ────────────────────────────────────────────────────────────── */
+let toastTimer = null;
+function showToast(msg, icon) {
+  const el = document.getElementById('toast');
+  el.innerHTML = `${icon ? `<i class="ti ${icon}" aria-hidden="true"></i>` : ''}${msg}`;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ── Share link (recipe encoded directly in the URL, no server storage) ─── */
+function encodeRecipeForShare(r) {
+  // Strip local-only fields (savedAt) before sharing
+  const payload = { name: r.name, time: r.time, difficulty: r.difficulty, servings: r.servings,
+    description: r.description, ingredients: r.ingredients, steps: r.steps, tip: r.tip };
+  const json = JSON.stringify(payload);
+  const b64 = btoa(unescape(encodeURIComponent(json))); // UTF-8 safe base64
+  return b64;
+}
+
+function decodeRecipeFromShare(b64) {
+  const json = decodeURIComponent(escape(atob(b64)));
+  const obj = JSON.parse(json);
+  if (!obj || typeof obj !== 'object' || !obj.name || !Array.isArray(obj.ingredients) || !Array.isArray(obj.steps)) {
+    throw new Error('invalid shape');
+  }
+  return obj;
+}
+
+async function shareRecipe(idx, fromRecent) {
+  const recipe = fromRecent ? savedRecipes[idx] : currentRecipes[idx];
+  if (!recipe) return;
+  const encoded = encodeRecipeForShare(recipe);
+  const url = `${location.origin}${location.pathname}#recipe=${encoded}`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: recipe.name, url });
+      return;
+    } catch (e) {
+      // user cancelled native share sheet — fall through to clipboard copy
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast(t('toastCopied'), 'ti-check');
+  } catch (e) {
+    // clipboard blocked — show the link so the user can copy manually
+    prompt(t('toastCopied') + ':', url);
+  }
+}
+
+/* ── Single-recipe export as a .fridgify file ─────────────────────────── */
+function downloadFridgifyFile(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'recipe';
+}
+
+function exportSingle(idx, fromRecent) {
+  const recipe = fromRecent ? savedRecipes[idx] : currentRecipes[idx];
+  if (!recipe) return;
+  const payload = { fridgifyVersion: 1, type: 'recipe', recipe: {
+    name: recipe.name, time: recipe.time, difficulty: recipe.difficulty, servings: recipe.servings,
+    description: recipe.description, ingredients: recipe.ingredients, steps: recipe.steps, tip: recipe.tip
+  }};
+  downloadFridgifyFile(payload, `${slugify(recipe.name)}.fridgify`);
+}
+
+function exportAll() {
+  if (!savedRecipes.length) { showToast(t('toastImportError'), 'ti-alert-circle'); return; }
+  const payload = { fridgifyVersion: 1, type: 'collection', recipes: savedRecipes };
+  downloadFridgifyFile(payload, 'fridgify-recipes.fridgify');
+  showToast(t('toastExported'), 'ti-download');
+}
+
+/* ── Import a .fridgify (or plain .json with the same shape) file ───────── */
+function handleImportFile(event) {
+  const file = event.target.files[0];
+  event.target.value = ''; // reset so the same file can be re-selected later
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      let toAdd = [];
+      if (data.type === 'recipe' && data.recipe) toAdd = [data.recipe];
+      else if (data.type === 'collection' && Array.isArray(data.recipes)) toAdd = data.recipes;
+      else throw new Error('unrecognized shape');
+
+      let added = 0;
+      toAdd.forEach(r => {
+        if (r && r.name && Array.isArray(r.ingredients) && Array.isArray(r.steps)) {
+          if (!savedRecipes.some(s => s.name === r.name)) {
+            savedRecipes.unshift({ ...r, savedAt: new Date().toISOString() });
+            added++;
+          }
+        }
+      });
+      persist();
+      renderRecent();
+      showToast(t('toastImported', added), 'ti-upload');
+    } catch (e) {
+      showToast(t('toastImportError'), 'ti-alert-circle');
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ── Shared-recipe overlay (opened via a Fridgify share link) ───────────── */
+function checkForSharedRecipe() {
+  const hash = location.hash;
+  const match = hash.match(/^#recipe=(.+)$/);
+  if (!match) return;
+
+  const overlay = document.getElementById('shared-overlay');
+  const shell = document.getElementById('shared-shell');
+  let recipe;
+  try {
+    recipe = decodeRecipeFromShare(match[1]);
+  } catch (e) {
+    shell.innerHTML = `<div class="shared-invalid">${t('sharedInvalid')}</div>
+      <div class="shared-actions"><button class="shared-dismiss" onclick="dismissSharedOverlay()">${t('sharedDismiss')}</button></div>`;
+    overlay.classList.add('open');
+    return;
+  }
+
+  window._pendingSharedRecipe = recipe;
+  shell.innerHTML = `
+    <div class="shared-banner"><i class="ti ti-chef-hat" aria-hidden="true"></i>${t('sharedBanner')}</div>
+    ${recipeCardHTML(recipe, 0, 's', false)}
+    <div class="shared-actions">
+      <button class="generate-btn" onclick="saveSharedRecipe()">${t('sharedAdd')}</button>
+      <button class="shared-dismiss" onclick="dismissSharedOverlay()">${t('sharedDismiss')}</button>
+    </div>`;
+  overlay.classList.add('open');
+}
+
+function saveSharedRecipe() {
+  const recipe = window._pendingSharedRecipe;
+  if (!recipe) return;
+  if (!savedRecipes.some(s => s.name === recipe.name)) {
+    savedRecipes.unshift({ ...recipe, savedAt: new Date().toISOString() });
+    persist();
+  }
+  fireConfetti();
+  showToast(t('saved'), 'ti-bookmark-filled');
+  dismissSharedOverlay();
+  showPage('recent');
+}
+
+function dismissSharedOverlay() {
+  document.getElementById('shared-overlay').classList.remove('open');
+  history.replaceState(null, '', location.pathname + location.search);
+}
+
+/* ── Fridge-merge sharing (share your ingredient list, no server) ───────── */
+function encodeFridgeForShare(list) {
+  const json = JSON.stringify(list);
+  return btoa(unescape(encodeURIComponent(json)));
+}
+
+function decodeFridgeFromShare(b64) {
+  const json = decodeURIComponent(escape(atob(b64)));
+  const arr = JSON.parse(json);
+  if (!Array.isArray(arr) || !arr.every(x => typeof x === 'string')) throw new Error('invalid shape');
+  return arr;
+}
+
+async function shareFridgeContents() {
+  if (!ingredients.length) return;
+  const encoded = encodeFridgeForShare(ingredients);
+  const url = `${location.origin}${location.pathname}#fridge=${encoded}`;
+
+  if (navigator.share) {
+    try { await navigator.share({ title: 'My Fridgify ingredients', url }); return; }
+    catch (e) { /* user cancelled — fall through to clipboard */ }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast(t('toastCopied'), 'ti-check');
+  } catch (e) {
+    prompt(t('toastCopied') + ':', url);
+  }
+}
+
+function checkForSharedFridge() {
+  const match = location.hash.match(/^#fridge=(.+)$/);
+  if (!match) return;
+
+  const overlay = document.getElementById('merge-overlay');
+  const shell = document.getElementById('merge-shell');
+  let list;
+  try {
+    list = decodeFridgeFromShare(match[1]);
+  } catch (e) {
+    shell.innerHTML = `<div class="shared-invalid">${t('sharedInvalid')}</div>
+      <div class="shared-actions"><button class="shared-dismiss" onclick="dismissMergeOverlay()">${t('sharedDismiss')}</button></div>`;
+    overlay.classList.add('open');
+    return;
+  }
+
+  window._pendingMergeIngredients = list;
+  shell.innerHTML = `
+    <div class="shared-banner"><i class="ti ti-rosette-discount-check" aria-hidden="true"></i>${t('mergeBanner')}</div>
+    <div class="merge-chip-preview">${list.map(ing => `<span class="chip">${ing}</span>`).join('')}</div>
+    <div class="shared-actions">
+      <button class="generate-btn" onclick="confirmMergeFridge()">${t('mergeAdd')}</button>
+      <button class="shared-dismiss" onclick="dismissMergeOverlay()">${t('mergeDismiss')}</button>
+    </div>`;
+  overlay.classList.add('open');
+}
+
+function confirmMergeFridge() {
+  const list = window._pendingMergeIngredients || [];
+  let added = 0;
+  list.forEach(ing => { if (!ingredients.includes(ing)) { ingredients.push(ing); added++; } });
+  renderChips();
+  updateBtn();
+  showToast(t('mergeAdded', added), 'ti-check');
+  dismissMergeOverlay();
+  showPage('generator');
+}
+
+function dismissMergeOverlay() {
+  document.getElementById('merge-overlay').classList.remove('open');
+  history.replaceState(null, '', location.pathname + location.search);
+}
+
+/* ── Cook mode: full-screen step-by-step view with timers ───────────────── */
+let cookState = null; // { recipe, stepIndex, timerInterval, timerRemaining }
+
+let wakeLockHandle = null;
+
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) wakeLockHandle = await navigator.wakeLock.request('screen');
+  } catch (e) {
+    // wake lock unsupported or blocked — cook mode still works, screen may just dim normally
+  }
+}
+
+function releaseWakeLock() {
+  if (wakeLockHandle) { wakeLockHandle.release().catch(() => {}); wakeLockHandle = null; }
+}
+
+function startCookMode(idx, fromRecent) {
+  const recipe = fromRecent ? savedRecipes[idx] : currentRecipes[idx];
+  if (!recipe || !recipe.steps || !recipe.steps.length) return;
+  cookState = { recipe, stepIndex: 0, timerInterval: null, timerRemaining: 0, timerRunning: false };
+  document.getElementById('cook-overlay').classList.add('open');
+  requestWakeLock();
+  renderCookStep();
+}
+
+function guessTimerSeconds(stepText) {
+  // Look for a duration in the step text and suggest a timer for it.
+  // Ranges like "8-10 minutes" use the upper bound (safer full cook time).
+  const text = stepText.toLowerCase();
+  const MAX_SECONDS = 60 * 60; // cap at 60 min — longer waits aren't a great fit for an on-screen timer
+  let seconds = 0;
+  const rangeMatch = text.match(/(\d+)\s*(?:-|to)\s*(\d+)\s*(minutes|minute|mins|min|hours|hour|hrs|hr)\b/);
+  if (rangeMatch) {
+    const upper = parseInt(rangeMatch[2], 10);
+    seconds = rangeMatch[3].startsWith('h') ? upper * 3600 : upper * 60;
+  } else {
+    const hourMatch = text.match(/(\d+)\s*(hours|hour|hrs|hr)\b/);
+    const minMatch = text.match(/(\d+)\s*(minutes|minute|mins|min)\b/);
+    const secMatch = text.match(/(\d+)\s*(seconds|second|secs|sec)\b/);
+    if (hourMatch) seconds = parseInt(hourMatch[1], 10) * 3600;
+    else if (minMatch) seconds = parseInt(minMatch[1], 10) * 60;
+    else if (secMatch) seconds = parseInt(secMatch[1], 10);
+  }
+  return seconds > MAX_SECONDS ? 0 : seconds;
+}
+
+function renderCookStep() {
+  if (!cookState) return;
+  stopCookTimer(); // clear any running timer from the previous step
+  const { recipe, stepIndex } = cookState;
+  const total = recipe.steps.length;
+  const stepText = recipe.steps[stepIndex];
+  const suggestedSeconds = guessTimerSeconds(stepText);
+  cookState.timerRemaining = suggestedSeconds;
+
+  document.getElementById('cook-progress-text').textContent = t('cookStepOf', stepIndex + 1, total);
+  document.getElementById('cook-progress-fill').style.width = `${((stepIndex + 1) / total) * 100}%`;
+
+  const body = document.getElementById('cook-body');
+  if (stepIndex < total) {
+    body.innerHTML = `
+      <div class="cook-recipe-name">${recipe.name}</div>
+      <div class="cook-step-text">${stepText}</div>
+      ${suggestedSeconds > 0 ? `
+      <div class="cook-timer-wrap">
+        <div class="cook-timer-display" id="cook-timer-display">${formatTimer(suggestedSeconds)}</div>
+        <button class="cook-timer-btn" id="cook-timer-btn" onclick="toggleCookTimer()">
+          <i class="ti ti-player-play" aria-hidden="true"></i> ${t('cookStartTimer')}
+        </button>
+      </div>` : ''}
+    `;
+  }
+
+  const nav = document.getElementById('cook-nav');
+  if (stepIndex >= total) {
+    body.innerHTML = `<div class="cook-finished">${t('cookFinished')}</div>`;
+    nav.innerHTML = `<button class="cook-nav-btn next" onclick="exitCookMode()">${t('cookDone')}</button>`;
+  } else {
+    nav.innerHTML = `
+      <button class="cook-nav-btn prev" onclick="cookPrevStep()" ${stepIndex === 0 ? 'disabled' : ''}>
+        <i class="ti ti-chevron-left" aria-hidden="true"></i> ${t('cookPrev')}
+      </button>
+      <button class="cook-nav-btn next" onclick="cookNextStep()">
+        ${stepIndex === total - 1 ? t('cookDone') : t('cookNext')} <i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </button>`;
+  }
+}
+
+function cookNextStep() {
+  if (!cookState) return;
+  cookState.stepIndex++;
+  renderCookStep();
+}
+
+function cookPrevStep() {
+  if (!cookState || cookState.stepIndex === 0) return;
+  cookState.stepIndex--;
+  renderCookStep();
+}
+
+function formatTimer(totalSeconds) {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function toggleCookTimer() {
+  if (!cookState || cookState.timerRunning) return;
+  cookState.timerRunning = true;
+  const btn = document.getElementById('cook-timer-btn');
+  if (btn) {
+    btn.classList.add('running');
+    btn.innerHTML = `<i class="ti ti-hourglass" aria-hidden="true"></i> ${t('cookTimerRunning')}`;
+  }
+  cookState.timerInterval = setInterval(() => {
+    cookState.timerRemaining--;
+    const display = document.getElementById('cook-timer-display');
+    if (display) display.textContent = formatTimer(Math.max(0, cookState.timerRemaining));
+    if (cookState.timerRemaining <= 0) {
+      stopCookTimer();
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      showToast(t('cookTimerRunning').replace('…', '') + ' ✓', 'ti-bell');
+    }
+  }, 1000);
+}
+
+function stopCookTimer() {
+  if (cookState && cookState.timerInterval) {
+    clearInterval(cookState.timerInterval);
+    cookState.timerInterval = null;
+    cookState.timerRunning = false;
+  }
+}
+
+function exitCookMode() {
+  stopCookTimer();
+  releaseWakeLock();
+  cookState = null;
+  document.getElementById('cook-overlay').classList.remove('open');
+}
+
+/* ── Unified hash router (recipe share link vs fridge share link) ───────── */
+function handleHashRoute() {
+  if (location.hash.startsWith('#recipe=')) checkForSharedRecipe();
+  else if (location.hash.startsWith('#fridge=')) checkForSharedFridge();
+}
+
+document.addEventListener('DOMContentLoaded', handleHashRoute);
+
+/* ── PWA: register service worker ────────────────────────────────────── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(err => console.warn('SW registration failed:', err));
+  });
+}
 </script>
 </body>
 </html>
