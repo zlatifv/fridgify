@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fridgify</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --surface-0: #f1efe8;
+    --surface-1: #e8e6e0;
+    --surface-2: #ffffff;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.18);
+    --text-primary: #1a1a18;
+    --text-secondary: #4a4a45;
+    --text-muted: #888780;
+    --bg-accent: #e8f0fb;
+    --text-accent: #1a5cc8;
+    --border-accent: #b3ccf5;
+    --fill-accent: #1a5cc8;
+    --on-accent: #ffffff;
+    --bg-success: #e8f5e8;
+    --text-success: #1e6b1e;
+    --border-success: #9fd89f;
+    --radius: 8px;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* Themes */
+  .theme-forest {
+    --surface-0: #1a2e1a; --surface-1: #223322; --surface-2: #2a3d2a;
+    --border: rgba(100,180,100,0.15); --border-strong: rgba(100,180,100,0.3);
+    --text-primary: #e8f5e8; --text-secondary: #9dbf9d; --text-muted: #5a7a5a;
+    --bg-accent: #1e3b1e; --text-accent: #6fcf6f; --border-accent: #3a5c3a;
+    --fill-accent: #4a9e4a; --on-accent: #fff;
+    --bg-success: #1e3b1e; --text-success: #6fcf6f; --border-success: #3a5c3a;
+    --chip-bg: #2a4a2a; --pref-active-bg: #2a4a2a; --pref-active-text: #6fcf6f;
+    --meta-bg: #223322; --meta-text: #9dbf9d;
+  }
+  .theme-sunset {
+    --surface-0: #2d1b0e; --surface-1: #3d2518; --surface-2: #4a2e1e;
+    --border: rgba(180,100,60,0.2); --border-strong: rgba(180,100,60,0.4);
+    --text-primary: #fdebd0; --text-secondary: #c8956a; --text-muted: #8a6045;
+    --bg-accent: #3d2518; --text-accent: #f4a261; --border-accent: #6b3d20;
+    --fill-accent: #e76f51; --on-accent: #fff;
+    --bg-success: #3d2518; --text-success: #f4a261; --border-success: #6b3d20;
+    --chip-bg: #5c3520; --pref-active-bg: #5c3520; --pref-active-text: #f4a261;
+    --meta-bg: #3d2518; --meta-text: #c8956a;
+  }
+  .theme-ocean {
+    --surface-0: #0a1628; --surface-1: #0f2040; --surface-2: #142a50;
+    --border: rgba(79,195,247,0.15); --border-strong: rgba(79,195,247,0.3);
+    --text-primary: #e1f5fe; --text-secondary: #7fb3d3; --text-muted: #3a6a8a;
+    --bg-accent: #0f2040; --text-accent: #4fc3f7; --border-accent: #1a3a6a;
+    --fill-accent: #0288d1; --on-accent: #fff;
+    --bg-success: #0f2040; --text-success: #4fc3f7; --border-success: #1a3a6a;
+    --chip-bg: #0a2a4a; --pref-active-bg: #0a2a4a; --pref-active-text: #4fc3f7;
+    --meta-bg: #0f2040; --meta-text: #7fb3d3;
+  }
+  .theme-lavender {
+    --surface-0: #1a1528; --surface-1: #221e38; --surface-2: #2a2545;
+    --border: rgba(179,157,219,0.15); --border-strong: rgba(179,157,219,0.3);
+    --text-primary: #ede7f6; --text-secondary: #9575cd; --text-muted: #5a4e80;
+    --bg-accent: #221e38; --text-accent: #b39ddb; --border-accent: #3d3560;
+    --fill-accent: #7e57c2; --on-accent: #fff;
+    --bg-success: #221e38; --text-success: #b39ddb; --border-success: #3d3560;
+    --chip-bg: #312a50; --pref-active-bg: #312a50; --pref-active-text: #b39ddb;
+    --meta-bg: #221e38; --meta-text: #9575cd;
+  }
+  .theme-paper {
+    --surface-0: #faf6f0; --surface-1: #f2ece2; --surface-2: #fff;
+    --border: rgba(100,70,40,0.12); --border-strong: rgba(100,70,40,0.25);
+    --text-primary: #2c1810; --text-secondary: #6b4c35; --text-muted: #a08060;
+    --bg-accent: #f0e4d0; --text-accent: #8b5e3c; --border-accent: #c9a07a;
+    --fill-accent: #8b5e3c; --on-accent: #fff;
+    --bg-success: #f0e4d0; --text-success: #8b5e3c; --border-success: #c9a07a;
+    --chip-bg: #f0e4d0; --pref-active-bg: #f0e4d0; --pref-active-text: #8b5e3c;
+    --meta-bg: #f0e4d0; --meta-text: #6b4c35;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--surface-0);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  /* Layout */
+  .shell { max-width: 720px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+  /* Nav */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 0; margin-bottom: 0.5rem; gap: 12px; flex-wrap: wrap;
+  }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab {
+    padding: 7px 16px; border-radius: 20px; font-size: 14px;
+    border: 0.5px solid transparent; cursor: pointer;
+    background: none; color: var(--text-muted); font-family: var(--font-sans);
+    transition: all 0.15s;
+  }
+  .nav-tab.active {
+    background: var(--surface-2); border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+  .nav-tab:not(.active):hover { color: var(--text-secondary); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+
+  select {
+    height: 32px; padding: 0 10px; border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong); background: var(--surface-2);
+    color: var(--text-primary); font-size: 13px; font-family: var(--font-sans); cursor: pointer;
+  }
+  .theme-dots { display: flex; gap: 6px; align-items: center; }
+  .theme-dot {
+    width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+    border: 2.5px solid transparent; transition: border-color 0.15s; flex-shrink: 0;
+  }
+  .theme-dot.active { border-color: var(--text-primary); }
+  .dot-default { background: conic-gradient(#e8e6e1 0deg 90deg,#3d3d3a 90deg 180deg,#e8e6e1 180deg 270deg,#3d3d3a 270deg); }
+  .dot-forest  { background: #4a9e4a; }
+  .dot-sunset  { background: #e76f51; }
+  .dot-ocean   { background: #0288d1; }
+  .dot-lavender{ background: #7e57c2; }
+  .dot-paper   { background: #8b5e3c; }
+
+  /* Page sections */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Header */
+  .page-header { margin-bottom: 1.75rem; }
+  .page-header h1 { font-size: 22px; font-weight: 500; color: var(--text-primary); }
+  .page-header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Ingredient input */
+  .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .input-row input {
+    flex: 1; height: 36px; padding: 0 12px; border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong); background: var(--surface-2);
+    color: var(--text-primary); font-size: 14px; font-family: var(--font-sans);
+  }
+  .input-row input::placeholder { color: var(--text-muted); }
+  .input-row input:focus { outline: none; box-shadow: 0 0 0 2px var(--bg-accent); border-color: var(--border-accent); }
+  .add-btn {
+    height: 36px; padding: 0 16px; border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong); background: var(--surface-2);
+    color: var(--text-primary); font-size: 14px; cursor: pointer; font-family: var(--font-sans);
+    white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  }
+  .add-btn:hover { background: var(--surface-1); }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px; margin-bottom: 1.25rem; }
+  .ch
