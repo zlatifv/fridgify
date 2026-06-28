@@ -614,7 +614,7 @@ const LANGS = {
   ja:{title:"冷蔵庫に何がある？",subtitle:"食材を入力して、Fridgify が作れる料理を見つけます。",add:"追加",placeholder:"例：鶏肉、レモン、にんにく…",empty:"まだ食材がありません — 上に追加してください",diet:"食事制限",prefs:["ベジタリアン","ヴィーガン","グルテンフリー","乳製品なし","時短（30分以内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"食材を追加してアイデアを探す",btnReady:n=>`${n}つの食材で Fridgify ↗`,btnLoading:"Fridgify 検索中…",results:n=>`冷蔵庫から ${n} 件のレシピ`,expand:"手順を見る ↓",collapse:"閉じる ↑",save:"保存",saved:"保存済み",ingredients:"材料",steps:"手順",tip:"シェフのヒント",error:"レシピを読み込めませんでした — もう一度お試しください。",loading:"冷蔵庫を漁っています…",recentTitle:"保存済みレシピ",recentSubtitle:"あとで見るために保存したレシピ。",recentEmpty:"保存されたレシピはありません。\n生成して気に入ったものを保存してください。",clearAll:"全て削除",goGen:"ジェネレーターへ ↗",surprise:"おまかせ",pantryLabel:"常備食材",tabGenerator:"ジェネレーター",tabRecent:"最近",savedCount:n=>`${n} 件保存済み`,confirmClear:"保存したレシピをすべて削除しますか？",exportAll:"すべて書き出す",import:"読み込む",share:"共有",toastCopied:"リンクをコピーしました",toastImported:n=>`${n} 件のレシピを読み込みました`,toastImportError:"このファイルは有効な Fridgify ファイルではありません",toastExported:"レシピを書き出しました",sharedBanner:"誰かが Fridgify でこのレシピを共有しました",sharedAdd:"自分のレシピに保存",sharedDismiss:"Fridgify を開く",sharedInvalid:"この共有リンクは壊れているか不完全のようです。",cookMode:"作る",cookStepOf:(a,b)=>`ステップ ${a} / ${b}`,cookDone:"完了",cookExit:"終了",cookStartTimer:"タイマー開始",cookTimerRunning:"タイマー作動中…",cookNext:"次へ",cookPrev:"戻る",cookFinished:"お疲れさまでした — 召し上がれ！🎉",shareFridge:"自分の冷蔵庫を共有",mergeBanner:"誰かが Fridgify で冷蔵庫の中身を共有しました",mergeAdd:"相手の食材を自分のものに追加",mergeDismiss:"いいえ",mergeAdded:n=>`${n} 件の食材を追加しました`,removeLabel:ing=>`${ing} を削除`},
 };
 
-/* ── Ingredient database (for autocomplete) ─────────────────────────────── */
+/* ── Ingredient database (canonical English keys, for autocomplete) ─────── */
 const INGREDIENT_DB = [
   "chicken breast","chicken thighs","ground beef","ground turkey","bacon","pork chops","sausage","steak","salmon","shrimp","tuna","tofu","eggs",
   "milk","butter","cheese","cheddar","mozzarella","parmesan","cream cheese","yogurt","sour cream","heavy cream",
@@ -624,6 +624,40 @@ const INGREDIENT_DB = [
   "olive oil","vegetable oil","soy sauce","vinegar","honey","sugar","brown sugar","salt","black pepper","paprika","cumin","oregano","basil","thyme","cinnamon","chili powder","ginger",
   "beans","black beans","chickpeas","lentils","canned tomatoes","tomato paste","coconut milk","broth","stock","mayonnaise","mustard","ketchup","peanut butter","almonds","walnuts"
 ];
+
+/* Translations of every INGREDIENT_DB term, keyed by language. Falls back to
+   the English term itself if a language is missing a translation. */
+const INGREDIENT_TRANSLATIONS = {
+  bg: {"chicken breast":"пилешко филе","chicken thighs":"пилешки бутчета","ground beef":"кайма от телешко","ground turkey":"кайма от пуешко","bacon":"бекон","pork chops":"свински пържоли","sausage":"наденица","steak":"стек","salmon":"сьомга","shrimp":"скариди","tuna":"риба тон","tofu":"тофу","eggs":"яйца","milk":"мляко","butter":"масло","cheese":"кашкавал","cheddar":"чедър","mozzarella":"моцарела","parmesan":"пармезан","cream cheese":"крема сирене","yogurt":"кисело мляко","sour cream":"сметана","heavy cream":"гъста сметана","rice":"ориз","pasta":"паста","spaghetti":"спагети","bread":"хляб","flour":"брашно","tortillas":"тортили","noodles":"юфка","quinoa":"киноа","oats":"овес","breadcrumbs":"галета","onion":"лук","garlic":"чесън","tomato":"домат","potato":"картоф","carrot":"морков","bell pepper":"чушка","broccoli":"броколи","spinach":"спанак","lettuce":"маруля","cucumber":"краставица","zucchini":"тиквичка","mushroom":"гъби","celery":"целина","corn":"царевица","peas":"грах","green beans":"зелен боб","cabbage":"зеле","avocado":"авокадо","lemon":"лимон","lime":"лайм","apple":"ябълка","banana":"банан","orange":"портокал","strawberries":"ягоди","blueberries":"боровинки","olive oil":"зехтин","vegetable oil":"растително масло","soy sauce":"соев сос","vinegar":"оцет","honey":"мед","sugar":"захар","brown sugar":"кафява захар","salt":"сол","black pepper":"черен пипер","paprika":"червен пипер","cumin":"кимион","oregano":"риган","basil":"босилек","thyme":"мащерка","cinnamon":"канела","chili powder":"люта чушка на прах","ginger":"джинджифил","beans":"фасул","black beans":"черен боб","chickpeas":"нахут","lentils":"леща","canned tomatoes":"консервирани домати","tomato paste":"доматено пюре","coconut milk":"кокосово мляко","broth":"бульон","stock":"бульон","mayonnaise":"майонеза","mustard":"горчица","ketchup":"кетчуп","peanut butter":"фъстъчено масло","almonds":"бадеми","walnuts":"орехи"},
+  es: {"chicken breast":"pechuga de pollo","chicken thighs":"muslos de pollo","ground beef":"carne molida","ground turkey":"pavo molido","bacon":"tocino","pork chops":"chuletas de cerdo","sausage":"salchicha","steak":"bistec","salmon":"salmón","shrimp":"camarones","tuna":"atún","tofu":"tofu","eggs":"huevos","milk":"leche","butter":"mantequilla","cheese":"queso","cheddar":"queso cheddar","mozzarella":"mozzarella","parmesan":"parmesano","cream cheese":"queso crema","yogurt":"yogur","sour cream":"crema agria","heavy cream":"nata espesa","rice":"arroz","pasta":"pasta","spaghetti":"espaguetis","bread":"pan","flour":"harina","tortillas":"tortillas","noodles":"fideos","quinoa":"quinoa","oats":"avena","breadcrumbs":"pan rallado","onion":"cebolla","garlic":"ajo","tomato":"tomate","potato":"papa","carrot":"zanahoria","bell pepper":"pimiento","broccoli":"brócoli","spinach":"espinaca","lettuce":"lechuga","cucumber":"pepino","zucchini":"calabacín","mushroom":"champiñón","celery":"apio","corn":"maíz","peas":"guisantes","green beans":"judías verdes","cabbage":"repollo","avocado":"aguacate","lemon":"limón","lime":"lima","apple":"manzana","banana":"plátano","orange":"naranja","strawberries":"fresas","blueberries":"arándanos","olive oil":"aceite de oliva","vegetable oil":"aceite vegetal","soy sauce":"salsa de soja","vinegar":"vinagre","honey":"miel","sugar":"azúcar","brown sugar":"azúcar moreno","salt":"sal","black pepper":"pimienta negra","paprika":"pimentón","cumin":"comino","oregano":"orégano","basil":"albahaca","thyme":"tomillo","cinnamon":"canela","chili powder":"chile en polvo","ginger":"jengibre","beans":"frijoles","black beans":"frijoles negros","chickpeas":"garbanzos","lentils":"lentejas","canned tomatoes":"tomate en lata","tomato paste":"puré de tomate","coconut milk":"leche de coco","broth":"caldo","stock":"caldo","mayonnaise":"mayonesa","mustard":"mostaza","ketchup":"ketchup","peanut butter":"mantequilla de cacahuate","almonds":"almendras","walnuts":"nueces"},
+  fr: {"chicken breast":"blanc de poulet","chicken thighs":"cuisses de poulet","ground beef":"bœuf haché","ground turkey":"dinde hachée","bacon":"lard","pork chops":"côtelettes de porc","sausage":"saucisse","steak":"steak","salmon":"saumon","shrimp":"crevettes","tuna":"thon","tofu":"tofu","eggs":"œufs","milk":"lait","butter":"beurre","cheese":"fromage","cheddar":"cheddar","mozzarella":"mozzarella","parmesan":"parmesan","cream cheese":"fromage à la crème","yogurt":"yaourt","sour cream":"crème aigre","heavy cream":"crème épaisse","rice":"riz","pasta":"pâtes","spaghetti":"spaghettis","bread":"pain","flour":"farine","tortillas":"tortillas","noodles":"nouilles","quinoa":"quinoa","oats":"avoine","breadcrumbs":"chapelure","onion":"oignon","garlic":"ail","tomato":"tomate","potato":"pomme de terre","carrot":"carotte","bell pepper":"poivron","broccoli":"brocoli","spinach":"épinards","lettuce":"laitue","cucumber":"concombre","zucchini":"courgette","mushroom":"champignon","celery":"céleri","corn":"maïs","peas":"petits pois","green beans":"haricots verts","cabbage":"chou","avocado":"avocat","lemon":"citron","lime":"citron vert","apple":"pomme","banana":"banane","orange":"orange","strawberries":"fraises","blueberries":"myrtilles","olive oil":"huile d'olive","vegetable oil":"huile végétale","soy sauce":"sauce soja","vinegar":"vinaigre","honey":"miel","sugar":"sucre","brown sugar":"sucre roux","salt":"sel","black pepper":"poivre noir","paprika":"paprika","cumin":"cumin","oregano":"origan","basil":"basilic","thyme":"thym","cinnamon":"cannelle","chili powder":"piment en poudre","ginger":"gingembre","beans":"haricots","black beans":"haricots noirs","chickpeas":"pois chiches","lentils":"lentilles","canned tomatoes":"tomates en conserve","tomato paste":"concentré de tomate","coconut milk":"lait de coco","broth":"bouillon","stock":"bouillon","mayonnaise":"mayonnaise","mustard":"moutarde","ketchup":"ketchup","peanut butter":"beurre de cacahuète","almonds":"amandes","walnuts":"noix"},
+  de: {"chicken breast":"Hühnerbrust","chicken thighs":"Hühnerschenkel","ground beef":"Rinderhack","ground turkey":"Putenhack","bacon":"Speck","pork chops":"Schweinekoteletts","sausage":"Wurst","steak":"Steak","salmon":"Lachs","shrimp":"Garnelen","tuna":"Thunfisch","tofu":"Tofu","eggs":"Eier","milk":"Milch","butter":"Butter","cheese":"Käse","cheddar":"Cheddar","mozzarella":"Mozzarella","parmesan":"Parmesan","cream cheese":"Frischkäse","yogurt":"Joghurt","sour cream":"Sauerrahm","heavy cream":"Sahne","rice":"Reis","pasta":"Nudeln","spaghetti":"Spaghetti","bread":"Brot","flour":"Mehl","tortillas":"Tortillas","noodles":"Nudeln","quinoa":"Quinoa","oats":"Haferflocken","breadcrumbs":"Semmelbrösel","onion":"Zwiebel","garlic":"Knoblauch","tomato":"Tomate","potato":"Kartoffel","carrot":"Karotte","bell pepper":"Paprika","broccoli":"Brokkoli","spinach":"Spinat","lettuce":"Kopfsalat","cucumber":"Gurke","zucchini":"Zucchini","mushroom":"Pilz","celery":"Sellerie","corn":"Mais","peas":"Erbsen","green beans":"grüne Bohnen","cabbage":"Kohl","avocado":"Avocado","lemon":"Zitrone","lime":"Limette","apple":"Apfel","banana":"Banane","orange":"Orange","strawberries":"Erdbeeren","blueberries":"Blaubeeren","olive oil":"Olivenöl","vegetable oil":"Pflanzenöl","soy sauce":"Sojasauce","vinegar":"Essig","honey":"Honig","sugar":"Zucker","brown sugar":"brauner Zucker","salt":"Salz","black pepper":"schwarzer Pfeffer","paprika":"Paprikapulver","cumin":"Kreuzkümmel","oregano":"Oregano","basil":"Basilikum","thyme":"Thymian","cinnamon":"Zimt","chili powder":"Chilipulver","ginger":"Ingwer","beans":"Bohnen","black beans":"schwarze Bohnen","chickpeas":"Kichererbsen","lentils":"Linsen","canned tomatoes":"Dosentomaten","tomato paste":"Tomatenmark","coconut milk":"Kokosmilch","broth":"Brühe","stock":"Brühe","mayonnaise":"Mayonnaise","mustard":"Senf","ketchup":"Ketchup","peanut butter":"Erdnussbutter","almonds":"Mandeln","walnuts":"Walnüsse"},
+  it: {"chicken breast":"petto di pollo","chicken thighs":"cosce di pollo","ground beef":"carne macinata","ground turkey":"tacchino macinato","bacon":"pancetta","pork chops":"braciole di maiale","sausage":"salsiccia","steak":"bistecca","salmon":"salmone","shrimp":"gamberi","tuna":"tonno","tofu":"tofu","eggs":"uova","milk":"latte","butter":"burro","cheese":"formaggio","cheddar":"cheddar","mozzarella":"mozzarella","parmesan":"parmigiano","cream cheese":"formaggio cremoso","yogurt":"yogurt","sour cream":"panna acida","heavy cream":"panna","rice":"riso","pasta":"pasta","spaghetti":"spaghetti","bread":"pane","flour":"farina","tortillas":"tortillas","noodles":"tagliatelle","quinoa":"quinoa","oats":"avena","breadcrumbs":"pangrattato","onion":"cipolla","garlic":"aglio","tomato":"pomodoro","potato":"patata","carrot":"carota","bell pepper":"peperone","broccoli":"broccoli","spinach":"spinaci","lettuce":"lattuga","cucumber":"cetriolo","zucchini":"zucchina","mushroom":"funghi","celery":"sedano","corn":"mais","peas":"piselli","green beans":"fagiolini","cabbage":"cavolo","avocado":"avocado","lemon":"limone","lime":"lime","apple":"mela","banana":"banana","orange":"arancia","strawberries":"fragole","blueberries":"mirtilli","olive oil":"olio d'oliva","vegetable oil":"olio vegetale","soy sauce":"salsa di soia","vinegar":"aceto","honey":"miele","sugar":"zucchero","brown sugar":"zucchero di canna","salt":"sale","black pepper":"pepe nero","paprika":"paprika","cumin":"cumino","oregano":"origano","basil":"basilico","thyme":"timo","cinnamon":"cannella","chili powder":"peperoncino in polvere","ginger":"zenzero","beans":"fagioli","black beans":"fagioli neri","chickpeas":"ceci","lentils":"lenticchie","canned tomatoes":"pomodori in scatola","tomato paste":"concentrato di pomodoro","coconut milk":"latte di cocco","broth":"brodo","stock":"brodo","mayonnaise":"maionese","mustard":"senape","ketchup":"ketchup","peanut butter":"burro di arachidi","almonds":"mandorle","walnuts":"noci"},
+  zh: {"chicken breast":"鸡胸肉","chicken thighs":"鸡腿肉","ground beef":"牛肉末","ground turkey":"火鸡肉末","bacon":"培根","pork chops":"猪排","sausage":"香肠","steak":"牛排","salmon":"鲑鱼","shrimp":"虾","tuna":"金枪鱼","tofu":"豆腐","eggs":"鸡蛋","milk":"牛奶","butter":"黄油","cheese":"芝士","cheddar":"切达芝士","mozzarella":"马苏里拉芝士","parmesan":"帕玛森芝士","cream cheese":"奶油芝士","yogurt":"酸奶","sour cream":"酸奶油","heavy cream":"浓奶油","rice":"米饭","pasta":"意面","spaghetti":"意大利细面","bread":"面包","flour":"面粉","tortillas":"墨西哥薄饼","noodles":"面条","quinoa":"藜麦","oats":"燕麦","breadcrumbs":"面包糠","onion":"洋葱","garlic":"大蒜","tomato":"番茄","potato":"土豆","carrot":"胡萝卜","bell pepper":"甜椒","broccoli":"西兰花","spinach":"菠菜","lettuce":"生菜","cucumber":"黄瓜","zucchini":"西葫芦","mushroom":"蘑菇","celery":"芹菜","corn":"玉米","peas":"豌豆","green beans":"青豆","cabbage":"卷心菜","avocado":"牛油果","lemon":"柠檬","lime":"青柠","apple":"苹果","banana":"香蕉","orange":"橙子","strawberries":"草莓","blueberries":"蓝莓","olive oil":"橄榄油","vegetable oil":"植物油","soy sauce":"酱油","vinegar":"醋","honey":"蜂蜜","sugar":"糖","brown sugar":"红糖","salt":"盐","black pepper":"黑胡椒","paprika":"红椒粉","cumin":"孜然","oregano":"牛至","basil":"罗勒","thyme":"百里香","cinnamon":"肉桂","chili powder":"辣椒粉","ginger":"姜","beans":"豆子","black beans":"黑豆","chickpeas":"鹰嘴豆","lentils":"扁豆","canned tomatoes":"罐装番茄","tomato paste":"番茄酱","coconut milk":"椰浆","broth":"高汤","stock":"高汤","mayonnaise":"蛋黄酱","mustard":"芥末","ketchup":"番茄酱","peanut butter":"花生酱","almonds":"杏仁","walnuts":"核桃"},
+  ja: {"chicken breast":"鶏むね肉","chicken thighs":"鶏もも肉","ground beef":"牛ひき肉","ground turkey":"ターキーひき肉","bacon":"ベーコン","pork chops":"豚ロース肉","sausage":"ソーセージ","steak":"ステーキ","salmon":"サーモン","shrimp":"エビ","tuna":"ツナ","tofu":"豆腐","eggs":"卵","milk":"牛乳","butter":"バター","cheese":"チーズ","cheddar":"チェダーチーズ","mozzarella":"モッツァレラチーズ","parmesan":"パルメザンチーズ","cream cheese":"クリームチーズ","yogurt":"ヨーグルト","sour cream":"サワークリーム","heavy cream":"生クリーム","rice":"米","pasta":"パスタ","spaghetti":"スパゲッティ","bread":"パン","flour":"小麦粉","tortillas":"トルティーヤ","noodles":"麺","quinoa":"キヌア","oats":"オートミール","breadcrumbs":"パン粉","onion":"玉ねぎ","garlic":"にんにく","tomato":"トマト","potato":"じゃがいも","carrot":"にんじん","bell pepper":"ピーマン","broccoli":"ブロッコリー","spinach":"ほうれん草","lettuce":"レタス","cucumber":"きゅうり","zucchini":"ズッキーニ","mushroom":"きのこ","celery":"セロリ","corn":"とうもろこし","peas":"グリーンピース","green beans":"さやいんげん","cabbage":"キャベツ","avocado":"アボカド","lemon":"レモン","lime":"ライム","apple":"りんご","banana":"バナナ","orange":"オレンジ","strawberries":"いちご","blueberries":"ブルーベリー","olive oil":"オリーブオイル","vegetable oil":"植物油","soy sauce":"醤油","vinegar":"酢","honey":"はちみつ","sugar":"砂糖","brown sugar":"きび砂糖","salt":"塩","black pepper":"黒こしょう","paprika":"パプリカパウダー","cumin":"クミン","oregano":"オレガノ","basil":"バジル","thyme":"タイム","cinnamon":"シナモン","chili powder":"チリパウダー","ginger":"しょうが","beans":"豆","black beans":"黒豆","chickpeas":"ひよこ豆","lentils":"レンズ豆","canned tomatoes":"トマト缶","tomato paste":"トマトペースト","coconut milk":"ココナッツミルク","broth":"スープストック","stock":"スープストック","mayonnaise":"マヨネーズ","mustard":"マスタード","ketchup":"ケチャップ","peanut butter":"ピーナッツバター","almonds":"アーモンド","walnuts":"くるみ"}
+};
+
+/* Translate a canonical (English) ingredient term into the active language.
+   Falls back to the English term if no translation exists for this language. */
+function translateIngredient(englishTerm) {
+  const table = INGREDIENT_TRANSLATIONS[lang];
+  return (table && table[englishTerm]) || englishTerm;
+}
+
+/* Reverse lookup: given displayed text in any language, find its canonical
+   English key — used so ingredients are stored/sent to the AI consistently
+   regardless of which language they were typed or selected in. */
+function canonicalizeIngredient(displayedTerm) {
+  const lower = displayedTerm.trim().toLowerCase();
+  if (INGREDIENT_DB.includes(lower)) return lower;
+  const table = INGREDIENT_TRANSLATIONS[lang];
+  if (table) {
+    for (const [en, translated] of Object.entries(table)) {
+      if (translated.toLowerCase() === lower) return en;
+    }
+  }
+  return displayedTerm; // free-text ingredient typed by the user — keep as-is
+}
 
 /* ── Pantry staples (excluded from "missing ingredient" prompts) ─────────── */
 const PANTRY_STAPLES = [
@@ -733,7 +767,7 @@ function renderPantryRow() {
   row.innerHTML = PANTRY_STAPLES.map(s => {
     const active = pantryActive.includes(s.key);
     return `<button class="pantry-chip${active ? ' active' : ''}" onclick="togglePantry('${s.key}')">
-      <i class="ti ${active ? 'ti-check' : 'ti-plus'}" aria-hidden="true"></i>${s.key}
+      <i class="ti ${active ? 'ti-check' : 'ti-plus'}" aria-hidden="true"></i>${translateIngredient(s.key)}
     </button>`;
   }).join('');
 }
@@ -779,9 +813,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function addIngredient() {
   const input = document.getElementById('ing-input');
-  const val = input.value.trim().toLowerCase();
+  const raw = input.value.trim();
   closeAutocomplete();
-  if (!val || ingredients.includes(val)) { input.value = ''; return; }
+  if (!raw) { input.value = ''; return; }
+  const val = canonicalizeIngredient(raw.toLowerCase());
+  if (ingredients.includes(val)) { input.value = ''; return; }
   ingredients.push(val);
   input.value = '';
   renderChips();
@@ -804,9 +840,10 @@ function renderChips() {
     el.innerHTML = `<span class="chip-empty">${t('empty')}</span>`;
     return;
   }
-  el.innerHTML = ingredients.map((ing, i) =>
-    `<span class="chip">${ing}<button onclick="removeIngredient(${i})" aria-label="${t('removeLabel', ing)}">×</button></span>`
-  ).join('');
+  el.innerHTML = ingredients.map((ing, i) => {
+    const display = translateIngredient(ing);
+    return `<span class="chip">${display}<button onclick="removeIngredient(${i})" aria-label="${t('removeLabel', display)}">×</button></span>`;
+  }).join('');
 }
 
 /* ── Autocomplete ─────────────────────────────────────────────────────── */
@@ -815,8 +852,12 @@ function updateAutocomplete(query) {
   acHighlight = -1;
   if (!q) { closeAutocomplete(); return; }
   acMatches = INGREDIENT_DB
-    .filter(item => item.includes(q) && !ingredients.includes(item))
-    .sort((a, b) => a.indexOf(q) - b.indexOf(q))
+    .filter(englishKey => {
+      if (ingredients.includes(englishKey)) return false;
+      const displayed = translateIngredient(englishKey).toLowerCase();
+      return englishKey.includes(q) || displayed.includes(q);
+    })
+    .sort((a, b) => translateIngredient(a).toLowerCase().indexOf(q) - translateIngredient(b).toLowerCase().indexOf(q))
     .slice(0, 6);
   renderAutocomplete();
 }
@@ -824,16 +865,17 @@ function updateAutocomplete(query) {
 function renderAutocomplete() {
   const list = document.getElementById('autocomplete-list');
   if (!acMatches.length) { list.classList.remove('open'); list.innerHTML = ''; return; }
-  list.innerHTML = acMatches.map((item, i) =>
-    `<div class="autocomplete-item${i === acHighlight ? ' highlighted' : ''}" onmousedown="selectAutocomplete('${item.replace(/'/g, "\\'")}')">
-      <i class="ti ti-search" aria-hidden="true"></i>${item}
-    </div>`
-  ).join('');
+  list.innerHTML = acMatches.map((englishKey, i) => {
+    const display = translateIngredient(englishKey);
+    return `<div class="autocomplete-item${i === acHighlight ? ' highlighted' : ''}" onmousedown="selectAutocomplete('${englishKey.replace(/'/g, "\\'")}')">
+      <i class="ti ti-search" aria-hidden="true"></i>${display}
+    </div>`;
+  }).join('');
   list.classList.add('open');
 }
 
-function selectAutocomplete(item) {
-  if (!ingredients.includes(item)) ingredients.push(item);
+function selectAutocomplete(englishKey) {
+  if (!ingredients.includes(englishKey)) ingredients.push(englishKey);
   document.getElementById('ing-input').value = '';
   closeAutocomplete();
   renderChips();
@@ -878,13 +920,15 @@ async function generate() {
   currentRecipes = [];
   results.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>${t('loading')}</p></div>`;
 
+  const displayedIngredients = ingredients.map(translateIngredient);
+  const displayedPantry = pantryActive.map(translateIngredient);
   const prefStr = prefs.length ? `Dietary preferences: ${prefs.join(', ')}.` : '';
-  const pantryStr = pantryActive.length ? `The user always has these pantry basics on hand, so don't flag them as missing: ${pantryActive.join(', ')}.` : '';
+  const pantryStr = displayedPantry.length ? `The user always has these pantry basics on hand, so don't flag them as missing: ${displayedPantry.join(', ')}.` : '';
   const langNames = { en:'English', bg:'Bulgarian', es:'Spanish', fr:'French', de:'German', it:'Italian', zh:'Chinese (Simplified)', ja:'Japanese' };
 
-  const prompt = `You are a creative chef assistant. Given a list of ingredients, suggest 4 recipe ideas. Respond entirely in ${langNames[lang] || 'English'}.
+  const prompt = `You are a creative chef assistant. Given a list of ingredients, suggest 4 recipe ideas. Respond entirely in ${langNames[lang] || 'English'} — use natural, native culinary terms for that language rather than translating word-for-word.
 
-Ingredients: ${ingredients.join(', ')}.
+Ingredients: ${displayedIngredients.join(', ')}.
 ${prefStr}
 ${pantryStr}
 
@@ -1291,7 +1335,7 @@ function checkForSharedFridge() {
   window._pendingMergeIngredients = list;
   shell.innerHTML = `
     <div class="shared-banner"><i class="ti ti-rosette-discount-check" aria-hidden="true"></i>${t('mergeBanner')}</div>
-    <div class="merge-chip-preview">${list.map(ing => `<span class="chip">${ing}</span>`).join('')}</div>
+    <div class="merge-chip-preview">${list.map(ing => `<span class="chip">${translateIngredient(ing)}</span>`).join('')}</div>
     <div class="shared-actions">
       <button class="generate-btn" onclick="confirmMergeFridge()">${t('mergeAdd')}</button>
       <button class="shared-dismiss" onclick="dismissMergeOverlay()">${t('mergeDismiss')}</button>
