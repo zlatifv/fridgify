@@ -139,9 +139,10 @@
   .page-header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
 
   /* Ingredient input */
-  .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .input-row { display: flex; gap: 8px; margin-bottom: 10px; position: relative; }
+  .input-wrap { flex: 1; position: relative; }
   .input-row input {
-    flex: 1; height: 36px; padding: 0 12px; border-radius: var(--radius);
+    width: 100%; height: 36px; padding: 0 12px; border-radius: var(--radius);
     border: 0.5px solid var(--border-strong); background: var(--surface-2);
     color: var(--text-primary); font-size: 14px; font-family: var(--font-sans);
   }
@@ -155,12 +156,32 @@
   }
   .add-btn:hover { background: var(--surface-1); }
 
+  /* Autocomplete dropdown */
+  .autocomplete-list {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface-2); border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    max-height: 220px; overflow-y: auto; z-index: 20; display: none;
+  }
+  .autocomplete-list.open { display: block; }
+  .autocomplete-item {
+    padding: 9px 12px; font-size: 13.5px; color: var(--text-primary);
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+  }
+  .autocomplete-item i { color: var(--text-muted); font-size: 14px; }
+  .autocomplete-item:hover, .autocomplete-item.highlighted { background: var(--surface-1); }
+
   /* Chips */
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px; margin-bottom: 1.25rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px; margin-bottom: 0.85rem; }
   .chip {
     display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 12px;
     border-radius: 20px; background: var(--chip-bg, var(--bg-accent));
     color: var(--text-accent); font-size: 13px; font-weight: 500;
+    animation: chip-in 0.18s ease;
+  }
+  @keyframes chip-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
   }
   .chip button {
     background: none; border: none; cursor: pointer; color: var(--text-accent);
@@ -168,6 +189,34 @@
   }
   .chip button:hover { opacity: 1; }
   .chip-empty { font-size: 13px; color: var(--text-muted); padding: 6px 0; }
+
+  /* Pantry staples row */
+  .pantry-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+  .pantry-chip {
+    font-size: 12px; padding: 5px 11px; border-radius: 20px;
+    border: 0.5px dashed var(--border-strong); background: transparent;
+    color: var(--text-muted); cursor: pointer; font-family: var(--font-sans);
+    display: flex; align-items: center; gap: 5px; transition: all 0.15s;
+  }
+  .pantry-chip i { font-size: 12px; }
+  .pantry-chip:hover { color: var(--text-secondary); }
+  .pantry-chip.active {
+    border-style: solid; border-color: var(--border-success);
+    background: var(--pref-active-bg, var(--bg-success));
+    color: var(--pref-active-text, var(--text-success));
+  }
+
+  /* Surprise button */
+  .surprise-row { display: flex; gap: 8px; margin-bottom: 1.25rem; }
+  .surprise-btn {
+    flex: 1; height: 38px; border-radius: var(--radius);
+    border: 0.5px dashed var(--border-strong); background: transparent;
+    color: var(--text-secondary); font-size: 13px; cursor: pointer;
+    font-family: var(--font-sans); display: flex; align-items: center;
+    justify-content: center; gap: 6px; transition: all 0.15s;
+  }
+  .surprise-btn:hover { background: var(--surface-1); color: var(--text-primary); border-style: solid; }
+  .surprise-btn i { font-size: 14px; }
 
   /* Section label */
   .section-label {
@@ -298,8 +347,8 @@
         <span style="color:var(--fill-accent)">F</span>ridgify
       </div>
       <div class="nav-tabs">
-        <button class="nav-tab active" onclick="showPage('generator')" id="tab-generator">Generator</button>
-        <button class="nav-tab" onclick="showPage('recent')" id="tab-recent">Recent</button>
+        <button class="nav-tab active" onclick="showPage('generator')" id="tab-generator"></button>
+        <button class="nav-tab" onclick="showPage('recent')" id="tab-recent"></button>
       </div>
     </div>
     <div class="nav-right">
@@ -332,13 +381,25 @@
     </div>
 
     <div class="input-row">
-      <input id="ing-input" type="text" maxlength="60" />
+      <div class="input-wrap">
+        <input id="ing-input" type="text" maxlength="60" autocomplete="off" />
+        <div class="autocomplete-list" id="autocomplete-list"></div>
+      </div>
       <button class="add-btn" onclick="addIngredient()">
         <i class="ti ti-plus" aria-hidden="true"></i>
         <span id="ui-add">Add</span>
       </button>
     </div>
     <div class="chips" id="chips"></div>
+
+    <div class="pantry-row" id="pantry-row"></div>
+
+    <div class="surprise-row">
+      <button class="surprise-btn" onclick="surpriseMe()">
+        <i class="ti ti-sparkles" aria-hidden="true"></i>
+        <span id="ui-surprise">Surprise me</span>
+      </button>
+    </div>
 
     <div class="section-label" id="ui-diet-label">Diet</div>
     <div class="prefs-row" id="prefs-row"></div>
@@ -361,23 +422,57 @@
 <script>
 /* ── Language strings ─────────────────────────────────────────────────── */
 const LANGS = {
-  en:{title:"What's in your fridge?",subtitle:"Add your ingredients and Fridgify will find what you can make.",add:"Add",placeholder:"e.g. chicken, lemon, garlic…",empty:"No ingredients yet — add some above",diet:"Diet",prefs:["Vegetarian","Vegan","Gluten-free","Dairy-free","Quick (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Add ingredients to get ideas",btnReady:n=>`Fridgify ${n} ingredient${n>1?'s':''} ↗`,btnLoading:"Fridgifying…",results:n=>`${n} recipes from your fridge`,expand:"Show steps & tips ↓",collapse:"Hide ↑",save:"Save",saved:"Saved",ingredients:"Ingredients",steps:"Steps",tip:"Chef's tip",error:"Couldn't load recipes — please try again.",loading:"Raiding your fridge…",recentTitle:"Saved recipes",recentSubtitle:"Recipes you've bookmarked for later.",recentEmpty:"No saved recipes yet.\nGenerate some and bookmark the ones you like.",clearAll:"Clear all",goGen:"Go to generator ↗"},
-  bg:{title:"Какво има в хладилника?",subtitle:"Добави съставките и Fridgify ще намери какво можеш да приготвиш.",add:"Добави",placeholder:"напр. пиле, лимон, чесън…",empty:"Все още няма съставки — добави по-горе",diet:"Диета",prefs:["Вегетарианско","Веганско","Без глутен","Без лактоза","Бързо (<30 мин)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Добави съставки за идеи",btnReady:n=>`Fridgify с ${n} съставк${n===1?'а':'и'} ↗`,btnLoading:"Fridgify търси…",results:n=>`${n} рецепти от хладилника ти`,expand:"Покажи стъпките ↓",collapse:"Скрий ↑",save:"Запази",saved:"Запазено",ingredients:"Съставки",steps:"Стъпки",tip:"Съвет на готвача",error:"Неуспешно зареждане — опитай пак.",loading:"Претърсвам хладилника…",recentTitle:"Запазени рецепти",recentSubtitle:"Рецепти, които си отбелязал за по-късно.",recentEmpty:"Няма запазени рецепти.\nГенерирай и запази тези, които харесваш.",clearAll:"Изчисти всички",goGen:"Към генератора ↗"},
-  es:{title:"¿Qué hay en tu nevera?",subtitle:"Añade tus ingredientes y Fridgify descubre qué puedes cocinar.",add:"Añadir",placeholder:"p. ej. pollo, limón, ajo…",empty:"Sin ingredientes aún — añade alguno arriba",diet:"Dieta",prefs:["Vegetariano","Vegano","Sin gluten","Sin lácteos","Rápido (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Añade ingredientes para buscar ideas",btnReady:n=>`Fridgify con ${n} ingrediente${n>1?'s':''} ↗`,btnLoading:"Fridgificando…",results:n=>`${n} recetas de tu nevera`,expand:"Ver pasos ↓",collapse:"Ocultar ↑",save:"Guardar",saved:"Guardado",ingredients:"Ingredientes",steps:"Pasos",tip:"Consejo del chef",error:"Error al cargar recetas — inténtalo de nuevo.",loading:"Revisando tu nevera…",recentTitle:"Recetas guardadas",recentSubtitle:"Recetas que has marcado para más tarde.",recentEmpty:"Sin recetas guardadas aún.\nGenera algunas y guarda las que te gusten.",clearAll:"Borrar todo",goGen:"Ir al generador ↗"},
-  fr:{title:"Qu'y a-t-il dans ton frigo ?",subtitle:"Ajoute tes ingrédients et Fridgify trouve ce que tu peux cuisiner.",add:"Ajouter",placeholder:"ex. poulet, citron, ail…",empty:"Pas encore d'ingrédients — ajoutes-en ci-dessus",diet:"Régime",prefs:["Végétarien","Végétalien","Sans gluten","Sans lactose","Rapide (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Ajoute des ingrédients pour obtenir des idées",btnReady:n=>`Fridgify avec ${n} ingrédient${n>1?'s':''} ↗`,btnLoading:"Fridgification en cours…",results:n=>`${n} recettes depuis ton frigo`,expand:"Voir les étapes ↓",collapse:"Masquer ↑",save:"Sauvegarder",saved:"Sauvegardé",ingredients:"Ingrédients",steps:"Étapes",tip:"Conseil du chef",error:"Impossible de charger les recettes — réessaie.",loading:"Fouillons le frigo…",recentTitle:"Recettes sauvegardées",recentSubtitle:"Recettes que tu as mises de côté pour plus tard.",recentEmpty:"Aucune recette sauvegardée.\nGénères-en et sauvegarde celles qui te plaisent.",clearAll:"Tout effacer",goGen:"Aller au générateur ↗"},
-  de:{title:"Was steckt in deinem Kühlschrank?",subtitle:"Zutaten eingeben und Fridgify findet, was du kochen kannst.",add:"Hinzufügen",placeholder:"z.B. Hähnchen, Zitrone, Knoblauch…",empty:"Noch keine Zutaten — füge oben welche hinzu",diet:"Ernährung",prefs:["Vegetarisch","Vegan","Glutenfrei","Laktosefrei","Schnell (<30 Min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Zutaten hinzufügen für Ideen",btnReady:n=>`Fridgify mit ${n} Zutat${n>1?'en':''} ↗`,btnLoading:"Fridgify sucht…",results:n=>`${n} Rezepte aus deinem Kühlschrank`,expand:"Schritte anzeigen ↓",collapse:"Ausblenden ↑",save:"Speichern",saved:"Gespeichert",ingredients:"Zutaten",steps:"Schritte",tip:"Tipp vom Koch",error:"Rezepte konnten nicht geladen werden — bitte erneut versuchen.",loading:"Kühlschrank wird durchsucht…",recentTitle:"Gespeicherte Rezepte",recentSubtitle:"Rezepte, die du für später gespeichert hast.",recentEmpty:"Noch keine gespeicherten Rezepte.\nGeneriere welche und speichere deine Favoriten.",clearAll:"Alle löschen",goGen:"Zum Generator ↗"},
-  it:{title:"Cosa c'è nel tuo frigo?",subtitle:"Aggiungi gli ingredienti e Fridgify trova cosa puoi cucinare.",add:"Aggiungi",placeholder:"es. pollo, limone, aglio…",empty:"Nessun ingrediente ancora — aggiungine sopra",diet:"Dieta",prefs:["Vegetariano","Vegano","Senza glutine","Senza lattosio","Veloce (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Aggiungi ingredienti per avere idee",btnReady:n=>`Fridgify con ${n} ingredient${n>1?'i':'e'} ↗`,btnLoading:"Fridgify in azione…",results:n=>`${n} ricette dal tuo frigo`,expand:"Mostra i passi ↓",collapse:"Nascondi ↑",save:"Salva",saved:"Salvato",ingredients:"Ingredienti",steps:"Passaggi",tip:"Consiglio dello chef",error:"Impossibile caricare le ricette — riprova.",loading:"Rovistando nel frigo…",recentTitle:"Ricette salvate",recentSubtitle:"Ricette che hai messo da parte per dopo.",recentEmpty:"Nessuna ricetta salvata.\nGenerane alcune e salva quelle che ti piacciono.",clearAll:"Cancella tutto",goGen:"Vai al generatore ↗"},
-  zh:{title:"冰箱里有什么？",subtitle:"添加你的食材，Fridgify 帮你找到能做的菜。",add:"添加",placeholder:"例如：鸡肉、柠檬、大蒜…",empty:"还没有食材 — 在上方添加",diet:"饮食",prefs:["素食","纯素","无麸质","无乳糖","快速（30分钟内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"添加食材以获取菜谱",btnReady:n=>`用 ${n} 种食材 Fridgify ↗`,btnLoading:"Fridgify 搜索中…",results:n=>`来自冰箱的 ${n} 道菜`,expand:"查看步骤 ↓",collapse:"收起 ↑",save:"保存",saved:"已保存",ingredients:"食材",steps:"步骤",tip:"厨师建议",error:"加载失败，请重试。",loading:"正在翻冰箱…",recentTitle:"已保存的菜谱",recentSubtitle:"你收藏的菜谱。",recentEmpty:"还没有保存的菜谱。\n生成一些，并保存你喜欢的。",clearAll:"清除全部",goGen:"前往生成器 ↗"},
-  ja:{title:"冷蔵庫に何がある？",subtitle:"食材を入力して、Fridgify が作れる料理を見つけます。",add:"追加",placeholder:"例：鶏肉、レモン、にんにく…",empty:"まだ食材がありません — 上に追加してください",diet:"食事制限",prefs:["ベジタリアン","ヴィーガン","グルテンフリー","乳製品なし","時短（30分以内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"食材を追加してアイデアを探す",btnReady:n=>`${n}つの食材で Fridgify ↗`,btnLoading:"Fridgify 検索中…",results:n=>`冷蔵庫から ${n} 件のレシピ`,expand:"手順を見る ↓",collapse:"閉じる ↑",save:"保存",saved:"保存済み",ingredients:"材料",steps:"手順",tip:"シェフのヒント",error:"レシピを読み込めませんでした — もう一度お試しください。",loading:"冷蔵庫を漁っています…",recentTitle:"保存済みレシピ",recentSubtitle:"あとで見るために保存したレシピ。",recentEmpty:"保存されたレシピはありません。\n生成して気に入ったものを保存してください。",clearAll:"全て削除",goGen:"ジェネレーターへ ↗"},
+  en:{title:"What's in your fridge?",subtitle:"Add your ingredients and Fridgify will find what you can make.",add:"Add",placeholder:"e.g. chicken, lemon, garlic…",empty:"No ingredients yet — add some above",diet:"Diet",prefs:["Vegetarian","Vegan","Gluten-free","Dairy-free","Quick (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Add ingredients to get ideas",btnReady:n=>`Fridgify ${n} ingredient${n>1?'s':''} ↗`,btnLoading:"Fridgifying…",results:n=>`${n} recipes from your fridge`,expand:"Show steps & tips ↓",collapse:"Hide ↑",save:"Save",saved:"Saved",ingredients:"Ingredients",steps:"Steps",tip:"Chef's tip",error:"Couldn't load recipes — please try again.",loading:"Raiding your fridge…",recentTitle:"Saved recipes",recentSubtitle:"Recipes you've bookmarked for later.",recentEmpty:"No saved recipes yet.\nGenerate some and bookmark the ones you like.",clearAll:"Clear all",goGen:"Go to generator ↗",surprise:"Surprise me",pantryLabel:"Pantry staples",tabGenerator:"Generator",tabRecent:"Recent",savedCount:n=>`${n} saved`,confirmClear:"Clear all saved recipes?"},
+  bg:{title:"Какво има в хладилника?",subtitle:"Добави съставките и Fridgify ще намери какво можеш да приготвиш.",add:"Добави",placeholder:"напр. пиле, лимон, чесън…",empty:"Все още няма съставки — добави по-горе",diet:"Диета",prefs:["Вегетарианско","Веганско","Без глутен","Без лактоза","Бързо (<30 мин)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Добави съставки за идеи",btnReady:n=>`Fridgify с ${n} съставк${n===1?'а':'и'} ↗`,btnLoading:"Fridgify търси…",results:n=>`${n} рецепти от хладилника ти`,expand:"Покажи стъпките ↓",collapse:"Скрий ↑",save:"Запази",saved:"Запазено",ingredients:"Съставки",steps:"Стъпки",tip:"Съвет на готвача",error:"Неуспешно зареждане — опитай пак.",loading:"Претърсвам хладилника…",recentTitle:"Запазени рецепти",recentSubtitle:"Рецепти, които си отбелязал за по-късно.",recentEmpty:"Няма запазени рецепти.\nГенерирай и запази тези, които харесваш.",clearAll:"Изчисти всички",goGen:"Към генератора ↗",surprise:"Изненадай ме",pantryLabel:"Основни продукти",tabGenerator:"Генератор",tabRecent:"Скорошни",savedCount:n=>`${n} запазени`,confirmClear:"Изчистване на всички запазени рецепти?"},
+  es:{title:"¿Qué hay en tu nevera?",subtitle:"Añade tus ingredientes y Fridgify descubre qué puedes cocinar.",add:"Añadir",placeholder:"p. ej. pollo, limón, ajo…",empty:"Sin ingredientes aún — añade alguno arriba",diet:"Dieta",prefs:["Vegetariano","Vegano","Sin gluten","Sin lácteos","Rápido (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Añade ingredientes para buscar ideas",btnReady:n=>`Fridgify con ${n} ingrediente${n>1?'s':''} ↗`,btnLoading:"Fridgificando…",results:n=>`${n} recetas de tu nevera`,expand:"Ver pasos ↓",collapse:"Ocultar ↑",save:"Guardar",saved:"Guardado",ingredients:"Ingredientes",steps:"Pasos",tip:"Consejo del chef",error:"Error al cargar recetas — inténtalo de nuevo.",loading:"Revisando tu nevera…",recentTitle:"Recetas guardadas",recentSubtitle:"Recetas que has marcado para más tarde.",recentEmpty:"Sin recetas guardadas aún.\nGenera algunas y guarda las que te gusten.",clearAll:"Borrar todo",goGen:"Ir al generador ↗",surprise:"Sorpréndeme",pantryLabel:"Básicos de despensa",tabGenerator:"Generador",tabRecent:"Reciente",savedCount:n=>`${n} guardada${n>1?'s':''}`,confirmClear:"¿Borrar todas las recetas guardadas?"},
+  fr:{title:"Qu'y a-t-il dans ton frigo ?",subtitle:"Ajoute tes ingrédients et Fridgify trouve ce que tu peux cuisiner.",add:"Ajouter",placeholder:"ex. poulet, citron, ail…",empty:"Pas encore d'ingrédients — ajoutes-en ci-dessus",diet:"Régime",prefs:["Végétarien","Végétalien","Sans gluten","Sans lactose","Rapide (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Ajoute des ingrédients pour obtenir des idées",btnReady:n=>`Fridgify avec ${n} ingrédient${n>1?'s':''} ↗`,btnLoading:"Fridgification en cours…",results:n=>`${n} recettes depuis ton frigo`,expand:"Voir les étapes ↓",collapse:"Masquer ↑",save:"Sauvegarder",saved:"Sauvegardé",ingredients:"Ingrédients",steps:"Étapes",tip:"Conseil du chef",error:"Impossible de charger les recettes — réessaie.",loading:"Fouillons le frigo…",recentTitle:"Recettes sauvegardées",recentSubtitle:"Recettes que tu as mises de côté pour plus tard.",recentEmpty:"Aucune recette sauvegardée.\nGénères-en et sauvegarde celles qui te plaisent.",clearAll:"Tout effacer",goGen:"Aller au générateur ↗",surprise:"Surprends-moi",pantryLabel:"Basiques du placard",tabGenerator:"Générateur",tabRecent:"Récents",savedCount:n=>`${n} sauvegardée${n>1?'s':''}`,confirmClear:"Effacer toutes les recettes sauvegardées ?"},
+  de:{title:"Was steckt in deinem Kühlschrank?",subtitle:"Zutaten eingeben und Fridgify findet, was du kochen kannst.",add:"Hinzufügen",placeholder:"z.B. Hähnchen, Zitrone, Knoblauch…",empty:"Noch keine Zutaten — füge oben welche hinzu",diet:"Ernährung",prefs:["Vegetarisch","Vegan","Glutenfrei","Laktosefrei","Schnell (<30 Min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Zutaten hinzufügen für Ideen",btnReady:n=>`Fridgify mit ${n} Zutat${n>1?'en':''} ↗`,btnLoading:"Fridgify sucht…",results:n=>`${n} Rezepte aus deinem Kühlschrank`,expand:"Schritte anzeigen ↓",collapse:"Ausblenden ↑",save:"Speichern",saved:"Gespeichert",ingredients:"Zutaten",steps:"Schritte",tip:"Tipp vom Koch",error:"Rezepte konnten nicht geladen werden — bitte erneut versuchen.",loading:"Kühlschrank wird durchsucht…",recentTitle:"Gespeicherte Rezepte",recentSubtitle:"Rezepte, die du für später gespeichert hast.",recentEmpty:"Noch keine gespeicherten Rezepte.\nGeneriere welche und speichere deine Favoriten.",clearAll:"Alle löschen",goGen:"Zum Generator ↗",surprise:"Überrasch mich",pantryLabel:"Grundzutaten",tabGenerator:"Generator",tabRecent:"Zuletzt",savedCount:n=>`${n} gespeichert`,confirmClear:"Alle gespeicherten Rezepte löschen?"},
+  it:{title:"Cosa c'è nel tuo frigo?",subtitle:"Aggiungi gli ingredienti e Fridgify trova cosa puoi cucinare.",add:"Aggiungi",placeholder:"es. pollo, limone, aglio…",empty:"Nessun ingrediente ancora — aggiungine sopra",diet:"Dieta",prefs:["Vegetariano","Vegano","Senza glutine","Senza lattosio","Veloce (<30 min)"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"Aggiungi ingredienti per avere idee",btnReady:n=>`Fridgify con ${n} ingredient${n>1?'i':'e'} ↗`,btnLoading:"Fridgify in azione…",results:n=>`${n} ricette dal tuo frigo`,expand:"Mostra i passi ↓",collapse:"Nascondi ↑",save:"Salva",saved:"Salvato",ingredients:"Ingredienti",steps:"Passaggi",tip:"Consiglio dello chef",error:"Impossibile caricare le ricette — riprova.",loading:"Rovistando nel frigo…",recentTitle:"Ricette salvate",recentSubtitle:"Ricette che hai messo da parte per dopo.",recentEmpty:"Nessuna ricetta salvata.\nGenerane alcune e salva quelle che ti piacciono.",clearAll:"Cancella tutto",goGen:"Vai al generatore ↗",surprise:"Sorprendimi",pantryLabel:"Base di dispensa",tabGenerator:"Generatore",tabRecent:"Recenti",savedCount:n=>`${n} salvata${n>1?'e':''}`,confirmClear:"Cancellare tutte le ricette salvate?"},
+  zh:{title:"冰箱里有什么？",subtitle:"添加你的食材，Fridgify 帮你找到能做的菜。",add:"添加",placeholder:"例如：鸡肉、柠檬、大蒜…",empty:"还没有食材 — 在上方添加",diet:"饮食",prefs:["素食","纯素","无麸质","无乳糖","快速（30分钟内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"添加食材以获取菜谱",btnReady:n=>`用 ${n} 种食材 Fridgify ↗`,btnLoading:"Fridgify 搜索中…",results:n=>`来自冰箱的 ${n} 道菜`,expand:"查看步骤 ↓",collapse:"收起 ↑",save:"保存",saved:"已保存",ingredients:"食材",steps:"步骤",tip:"厨师建议",error:"加载失败，请重试。",loading:"正在翻冰箱…",recentTitle:"已保存的菜谱",recentSubtitle:"你收藏的菜谱。",recentEmpty:"还没有保存的菜谱。\n生成一些，并保存你喜欢的。",clearAll:"清除全部",goGen:"前往生成器 ↗",surprise:"给我惊喜",pantryLabel:"常备调料",tabGenerator:"生成器",tabRecent:"最近",savedCount:n=>`已保存 ${n} 个`,confirmClear:"清除所有已保存的菜谱？"},
+  ja:{title:"冷蔵庫に何がある？",subtitle:"食材を入力して、Fridgify が作れる料理を見つけます。",add:"追加",placeholder:"例：鶏肉、レモン、にんにく…",empty:"まだ食材がありません — 上に追加してください",diet:"食事制限",prefs:["ベジタリアン","ヴィーガン","グルテンフリー","乳製品なし","時短（30分以内）"],prefKeys:["vegetarian","vegan","gluten-free","dairy-free","quick (under 30 min)"],btnEmpty:"食材を追加してアイデアを探す",btnReady:n=>`${n}つの食材で Fridgify ↗`,btnLoading:"Fridgify 検索中…",results:n=>`冷蔵庫から ${n} 件のレシピ`,expand:"手順を見る ↓",collapse:"閉じる ↑",save:"保存",saved:"保存済み",ingredients:"材料",steps:"手順",tip:"シェフのヒント",error:"レシピを読み込めませんでした — もう一度お試しください。",loading:"冷蔵庫を漁っています…",recentTitle:"保存済みレシピ",recentSubtitle:"あとで見るために保存したレシピ。",recentEmpty:"保存されたレシピはありません。\n生成して気に入ったものを保存してください。",clearAll:"全て削除",goGen:"ジェネレーターへ ↗",surprise:"おまかせ",pantryLabel:"常備食材",tabGenerator:"ジェネレーター",tabRecent:"最近",savedCount:n=>`${n} 件保存済み`,confirmClear:"保存したレシピをすべて削除しますか？"},
 };
+
+/* ── Ingredient database (for autocomplete) ─────────────────────────────── */
+const INGREDIENT_DB = [
+  "chicken breast","chicken thighs","ground beef","ground turkey","bacon","pork chops","sausage","steak","salmon","shrimp","tuna","tofu","eggs",
+  "milk","butter","cheese","cheddar","mozzarella","parmesan","cream cheese","yogurt","sour cream","heavy cream",
+  "rice","pasta","spaghetti","bread","flour","tortillas","noodles","quinoa","oats","breadcrumbs",
+  "onion","garlic","tomato","potato","carrot","bell pepper","broccoli","spinach","lettuce","cucumber","zucchini","mushroom","celery","corn","peas","green beans","cabbage","avocado",
+  "lemon","lime","apple","banana","orange","strawberries","blueberries",
+  "olive oil","vegetable oil","soy sauce","vinegar","honey","sugar","brown sugar","salt","black pepper","paprika","cumin","oregano","basil","thyme","cinnamon","chili powder","ginger",
+  "beans","black beans","chickpeas","lentils","canned tomatoes","tomato paste","coconut milk","broth","stock","mayonnaise","mustard","ketchup","peanut butter","almonds","walnuts"
+];
+
+/* ── Pantry staples (excluded from "missing ingredient" prompts) ─────────── */
+const PANTRY_STAPLES = [
+  { key: "salt" }, { key: "black pepper" }, { key: "olive oil" }, { key: "butter" },
+  { key: "garlic" }, { key: "onion" }, { key: "flour" }, { key: "sugar" }
+];
+
+/* ── Surprise pools (randomized ingredient sets to spark ideas) ──────────── */
+const SURPRISE_POOLS = [
+  ["chicken breast","lemon","garlic","spinach"],
+  ["ground beef","onion","bell pepper","rice"],
+  ["shrimp","garlic","lime","cilantro"],
+  ["tofu","soy sauce","ginger","broccoli"],
+  ["eggs","cheese","spinach","mushroom"],
+  ["pasta","tomato","garlic","basil"],
+  ["salmon","lemon","asparagus","dill"],
+  ["chickpeas","tomato","onion","cumin"],
+  ["pork chops","apple","onion","thyme"],
+  ["potato","cheese","bacon","sour cream"]
+];
 
 /* ── State ────────────────────────────────────────────────────────────── */
 let lang = 'en';
 let ingredients = [];
 let prefs = [];
+let pantryActive = []; // active pantry staple keys
 let savedRecipes = JSON.parse(localStorage.getItem('recipe-app-saved') || '[]');
 let currentRecipes = []; // recipes currently shown
 let currentPage = 'generator';
+let acMatches = []; // current autocomplete matches
+let acHighlight = -1; // highlighted autocomplete index
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 function t(key, ...args) {
@@ -420,15 +515,19 @@ function setLang(l) {
 }
 
 function renderUI() {
+  document.getElementById('tab-generator').textContent = t('tabGenerator');
+  document.getElementById('tab-recent').textContent = t('tabRecent');
   document.getElementById('ui-title').textContent = t('title');
   document.getElementById('ui-subtitle').textContent = t('subtitle');
   document.getElementById('ui-add').textContent = t('add');
   document.getElementById('ing-input').placeholder = t('placeholder');
   document.getElementById('ui-diet-label').textContent = t('diet');
+  document.getElementById('ui-surprise').textContent = t('surprise');
   document.getElementById('ui-recent-title').textContent = t('recentTitle');
   document.getElementById('ui-recent-subtitle').textContent = t('recentSubtitle');
   renderChips();
   renderPrefs();
+  renderPantryRow();
   updateBtn();
   if (currentRecipes.length) renderRecipes(currentRecipes, false); // re-render labels
 }
@@ -441,17 +540,59 @@ function renderPrefs() {
   ).join('');
 }
 
+function renderPantryRow() {
+  const row = document.getElementById('pantry-row');
+  row.innerHTML = PANTRY_STAPLES.map(s => {
+    const active = pantryActive.includes(s.key);
+    return `<button class="pantry-chip${active ? ' active' : ''}" onclick="togglePantry('${s.key}')">
+      <i class="ti ${active ? 'ti-check' : 'ti-plus'}" aria-hidden="true"></i>${s.key}
+    </button>`;
+  }).join('');
+}
+
+function togglePantry(key) {
+  const idx = pantryActive.indexOf(key);
+  if (idx > -1) {
+    pantryActive.splice(idx, 1);
+    ingredients = ingredients.filter(i => i !== key);
+  } else {
+    pantryActive.push(key);
+    if (!ingredients.includes(key)) ingredients.push(key);
+  }
+  renderPantryRow();
+  renderChips();
+  updateBtn();
+}
+
 /* ── Ingredients ──────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('ing-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addIngredient();
+  const input = document.getElementById('ing-input');
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (acHighlight > -1 && acMatches[acHighlight]) {
+        selectAutocomplete(acMatches[acHighlight]);
+      } else {
+        addIngredient();
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (acMatches.length) { acHighlight = (acHighlight + 1) % acMatches.length; renderAutocomplete(); }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (acMatches.length) { acHighlight = (acHighlight - 1 + acMatches.length) % acMatches.length; renderAutocomplete(); }
+    } else if (e.key === 'Escape') {
+      closeAutocomplete();
+    }
   });
+  input.addEventListener('input', () => updateAutocomplete(input.value));
+  input.addEventListener('blur', () => setTimeout(closeAutocomplete, 120));
   renderUI();
 });
 
 function addIngredient() {
   const input = document.getElementById('ing-input');
   const val = input.value.trim().toLowerCase();
+  closeAutocomplete();
   if (!val || ingredients.includes(val)) { input.value = ''; return; }
   ingredients.push(val);
   input.value = '';
@@ -460,7 +601,11 @@ function addIngredient() {
 }
 
 function removeIngredient(i) {
+  const removed = ingredients[i];
   ingredients.splice(i, 1);
+  // keep pantry toggle row in sync if a staple chip was removed directly
+  const staleIdx = pantryActive.indexOf(removed);
+  if (staleIdx > -1) { pantryActive.splice(staleIdx, 1); renderPantryRow(); }
   renderChips();
   updateBtn();
 }
@@ -476,6 +621,45 @@ function renderChips() {
   ).join('');
 }
 
+/* ── Autocomplete ─────────────────────────────────────────────────────── */
+function updateAutocomplete(query) {
+  const q = query.trim().toLowerCase();
+  acHighlight = -1;
+  if (!q) { closeAutocomplete(); return; }
+  acMatches = INGREDIENT_DB
+    .filter(item => item.includes(q) && !ingredients.includes(item))
+    .sort((a, b) => a.indexOf(q) - b.indexOf(q))
+    .slice(0, 6);
+  renderAutocomplete();
+}
+
+function renderAutocomplete() {
+  const list = document.getElementById('autocomplete-list');
+  if (!acMatches.length) { list.classList.remove('open'); list.innerHTML = ''; return; }
+  list.innerHTML = acMatches.map((item, i) =>
+    `<div class="autocomplete-item${i === acHighlight ? ' highlighted' : ''}" onmousedown="selectAutocomplete('${item.replace(/'/g, "\\'")}')">
+      <i class="ti ti-search" aria-hidden="true"></i>${item}
+    </div>`
+  ).join('');
+  list.classList.add('open');
+}
+
+function selectAutocomplete(item) {
+  if (!ingredients.includes(item)) ingredients.push(item);
+  document.getElementById('ing-input').value = '';
+  closeAutocomplete();
+  renderChips();
+  updateBtn();
+  document.getElementById('ing-input').focus();
+}
+
+function closeAutocomplete() {
+  acMatches = []; acHighlight = -1;
+  const list = document.getElementById('autocomplete-list');
+  list.classList.remove('open');
+  list.innerHTML = '';
+}
+
 function togglePref(btn, pref) {
   if (prefs.includes(pref)) { prefs = prefs.filter(p => p !== pref); btn.classList.remove('active'); }
   else { prefs.push(pref); btn.classList.add('active'); }
@@ -487,6 +671,15 @@ function updateBtn() {
   else { btn.disabled = true; btn.textContent = t('btnEmpty'); }
 }
 
+/* ── Surprise me ──────────────────────────────────────────────────────── */
+function surpriseMe() {
+  const pool = SURPRISE_POOLS[Math.floor(Math.random() * SURPRISE_POOLS.length)];
+  pool.forEach(item => { if (!ingredients.includes(item)) ingredients.push(item); });
+  renderChips();
+  updateBtn();
+  generate();
+}
+
 /* ── Generate ─────────────────────────────────────────────────────────── */
 async function generate() {
   const btn = document.getElementById('gen-btn');
@@ -496,25 +689,27 @@ async function generate() {
   results.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>${t('loading')}</p></div>`;
 
   const prefStr = prefs.length ? `Dietary preferences: ${prefs.join(', ')}.` : '';
+  const pantryStr = pantryActive.length ? `The user always has these pantry basics on hand, so don't flag them as missing: ${pantryActive.join(', ')}.` : '';
   const langNames = { en:'English', bg:'Bulgarian', es:'Spanish', fr:'French', de:'German', it:'Italian', zh:'Chinese (Simplified)', ja:'Japanese' };
 
   const prompt = `You are a creative chef assistant. Given a list of ingredients, suggest 4 recipe ideas. Respond entirely in ${langNames[lang] || 'English'}.
 
 Ingredients: ${ingredients.join(', ')}.
 ${prefStr}
+${pantryStr}
 
 Respond ONLY with a JSON array (no markdown, no extra text):
 [{"name":"...","time":"...","difficulty":"...","servings":"...","description":"...","ingredients":["..."],"steps":["..."],"tip":"..."}]
-Vary cuisines. For missing key ingredients, prefix with "also need:" in the ingredients list.`;
+Vary cuisines. For missing key ingredients (excluding pantry basics noted above), prefix with "also need:" in the ingredients list.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
-    const text = data.content.map(b => b.text || '').join('');
+    const text = data.choices[0].message.content;
     const clean = text.replace(/```json|```/g, '').trim();
     const recipes = JSON.parse(clean);
     currentRecipes = recipes;
@@ -601,7 +796,7 @@ function renderRecipes(recipes, newSearch) {
 
 /* ── Recent page ──────────────────────────────────────────────────────── */
 function clearAll() {
-  if (!confirm('Clear all saved recipes?')) return;
+  if (!confirm(t('confirmClear'))) return;
   savedRecipes = [];
   persist();
   renderRecent();
@@ -629,7 +824,7 @@ function renderRecent() {
   });
 
   let html = `<div class="recent-header-row">
-    <span class="results-header">${savedRecipes.length} saved</span>
+    <span class="results-header">${t('savedCount', savedRecipes.length)}</span>
     <button class="clear-btn" onclick="clearAll()">${t('clearAll')}</button>
   </div>`;
 
